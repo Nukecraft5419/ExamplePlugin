@@ -1,4 +1,6 @@
 name: ExamplePlugin
-version: '${version}'
+description: An example plugin
+author: Nukecraft5419
+version: 1.0.0
 main: dev.nukecraft5419.exampleplugin.ExamplePlugin
 api-version: '1.20'
