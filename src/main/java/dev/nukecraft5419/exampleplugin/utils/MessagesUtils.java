@@ -1,7 +1,6 @@
 package dev.nukecraft5419.exampleplugin.utils;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
-import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import org.bukkit.ChatColor;
 
 public class MessagesUtils {
