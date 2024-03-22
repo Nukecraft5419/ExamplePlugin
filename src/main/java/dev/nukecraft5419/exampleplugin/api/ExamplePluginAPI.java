@@ -13,10 +13,6 @@ public class ExamplePluginAPI {
         ExamplePluginAPI.plugin = plugin;
     }
 
-    public static String getFolder() {
-        return plugin.getDataFolder().getAbsolutePath();
-    }
-
     public static String getVersionPlugin() {
         return  plugin.getDescription().getVersion();
     }
