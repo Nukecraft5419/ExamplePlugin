@@ -17,12 +17,12 @@ public class ExamplePluginAPI {
         return plugin.getDataFolder().getAbsolutePath();
     }
 
-    public static String getVersion() {
+    public static String getVersionPlugin() {
         return  plugin.getDescription().getVersion();
     }
 
     public static String getName() {
-        return plugin.getDescription().getAuthors().toString();
+        return plugin.getDescription().getAuthors().get(0);
     }
 
     public static String getApiVersion(){
@@ -37,11 +37,5 @@ public class ExamplePluginAPI {
     public static String getServerVersion() {
         String pkg = server.getClass().getPackage().getName();
         return pkg.substring(pkg.lastIndexOf('.') + 1);
-    }
-
-    public static int[] getIntVersion() {
-        int version = Integer.parseInt(server.getClass().getName().split("\\.")[3].split("_")[1]);
-        int release = Integer.parseInt(server.getClass().getName().split("\\.")[3].split("R")[1]);
-        return new int[]{ version, release };
     }
 }
