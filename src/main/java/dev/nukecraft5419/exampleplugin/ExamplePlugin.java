@@ -2,16 +2,12 @@ package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.MainCommand;
-import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
-import org.bukkit.entity.Player;
+import dev.nukecraft5419.exampleplugin.utils.RegisterCommandsUtils;
+import dev.nukecraft5419.exampleplugin.utils.RegisterEventsUtils;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.Listener;
 
 public class ExamplePlugin extends JavaPlugin {
-    private void addListener(Listener listener) {
-        this.getServer().getPluginManager().registerEvents(listener, this);
-    }
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -21,10 +17,10 @@ public class ExamplePlugin extends JavaPlugin {
         ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("&eExamplePlugin &asuccessfully enabled!"));
 
         // Register events
-        this.addListener(new PlayerJoinListener(this));
+        RegisterEventsUtils registerEventsUtils = new RegisterEventsUtils(this);
 
         // Register commands
-        getCommand("exampleplugin").setExecutor(new MainCommand(this));
+        RegisterCommandsUtils registerCommandsUtils = new RegisterCommandsUtils(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.Listener;
 
 public class ExamplePluginAPI {
     private static ExamplePlugin plugin;
