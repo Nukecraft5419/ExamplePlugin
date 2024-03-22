@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         String displayName = player.getDisplayName();
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&eHello" + "&c" + displayName + "&6this is example message join"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"Version" + "&6" + ExamplePluginAPI.getIntVersion()[0] + "." + ExamplePluginAPI.getIntVersion()[1] + "&6" + ExamplePluginAPI.getServerVersion()));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&eHello " + "&c" + displayName + " &6this is example message join"));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bVersion server: " + "&6" + ExamplePluginAPI.getServerVersion() + " &bversion plugin: " + "&c" + ExamplePluginAPI.getVersionPlugin() + " &bversion api plugin: " + "&a" + ExamplePluginAPI.getApiVersion()));
     }
 }
