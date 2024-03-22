@@ -4,3 +4,8 @@ author: Nukecraft5419
 version: 1.0.0
 main: dev.nukecraft5419.exampleplugin.ExamplePlugin
 api-version: '1.20'
+commands:
+    exampleplugin:
+        description: An example command
+        usage: exampleplugin
+        aliases: example
