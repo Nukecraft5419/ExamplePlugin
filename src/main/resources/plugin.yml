@@ -6,6 +6,8 @@ main: dev.nukecraft5419.exampleplugin.ExamplePlugin
 api-version: '1.20'
 commands:
     exampleplugin:
-        description: An example command
-        usage: exampleplugin
+        description: Main command for the plugin
         aliases: example
+    hello:
+        description: Say hi
+        aliases: hi

@@ -25,7 +25,7 @@ public class ExamplePluginAPI {
         return plugin.getDescription().getAuthors().get(0);
     }
 
-    public static String getApiVersion(){
+    public static String getServerApiVersion(){
         return plugin.getDescription().getAPIVersion();
     }
 

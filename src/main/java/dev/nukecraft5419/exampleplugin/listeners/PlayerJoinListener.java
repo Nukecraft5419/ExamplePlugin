@@ -2,6 +2,7 @@ package dev.nukecraft5419.exampleplugin.listeners;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,12 +17,20 @@ public class PlayerJoinListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onJoinPlayer(PlayerJoinEvent event){
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         String displayName = player.getDisplayName();
+        String serverVersion = ExamplePluginAPI.getServerVersion();
+        String versionPlugin = ExamplePluginAPI.getVersionPlugin();
+        String serverApiVersion = ExamplePluginAPI.getServerApiVersion();
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&eHello " + "&c" + displayName + " &6this is example message join"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bVersion server: " + "&6" + ExamplePluginAPI.getServerVersion() + " &bversion plugin: " + "&c" + ExamplePluginAPI.getVersionPlugin() + " &bversion api plugin: " + "&a" + ExamplePluginAPI.getApiVersion()));
+        if (plugin.getConfig().getBoolean("join.enabled")) {
+            player.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getJoinMessage().replace("%displayname%", displayName)));
+        }
+
+        if (plugin.getConfig().getBoolean("server-info.enabled")) {
+            player.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getServerInfoMessage().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%server_version%", serverVersion).replace("%version_plugin%", versionPlugin).replace("%server_api_version%", serverApiVersion)));
+        }
     }
 }
