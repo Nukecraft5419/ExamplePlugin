@@ -3,10 +3,8 @@ package dev.nukecraft5419.exampleplugin.listeners;
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
