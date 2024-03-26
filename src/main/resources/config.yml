@@ -1,0 +1,78 @@
+#╔═══════════════════╗
+#║ ● ExamplePlugin ● ║
+#╚═══════════════════╝
+
+# Minecraft Legacy Colour Codes
+
+# Color Code
+# &0 Changes text to Black
+# &1 Changes text to Dark Blue
+# &2 Changes text to Dark Green
+# &3 Changes text to Dark Aqua
+# &4 Changes text to Dark Red
+# &5 Changes text to Dark Purple
+# &6 Changes text to Gold
+# &7 Changes text to Gray
+# &8 Changes text to Dark Gray
+# &9 Changes text to Blue
+# &a Changes text to Green
+# &b Changes text to Aqua
+# &c Changes text to Red
+# &d Changes text to Light Purple
+# &e Changes text to Yellow
+# &f Changes text to White
+
+# Format Code
+# &k Change Text to Obfuscated
+# &l Change Text to Bold
+# &m Change Text to Strikethrough
+# &n Change Text to Underline
+# &o Change Text to Italic
+# &r Change Text to Reset to the default
+
+# Variables that can be used
+# %prefix% - The prefix of the plugin
+# %author_plugin% - The author of the plugin
+# %version_plugin% - The version of the plugin
+# %displayname% - The display name of the player
+# %server_version% - The version of the server
+# %server_api_version% - The version of the api of the server
+
+#╔════════════════════╗
+#║ ● Plugin Message ● ║
+#╚════════════════════╝
+plugin:
+    prefix: "&6&lExamplePlugin &8»"
+    hello: "&aHello &e%display_name%!"
+    author: "%prefix% &7The author of the plugin is: &e%author%"
+    version: "%prefix% &7The version of the plugin is the: &ev%version%"
+    reload: "%prefix% &7The plugin has been reloaded!"
+    help:
+        - "&8&m-------&r&8[&6&lExamplePlugin&8]&m-------"
+        - "&7- &c/exampleplugin help &7- &eShow help"
+        - "&7- &c/exampleplugin hello &7- &eShow hello"
+        - "&7- &c/exampleplugin get &7- &eShow <author/version>"
+        - "&7- &c/exampleplugin reload &7- &eReload plugin"
+        - "&8&m-----------------------------------------"
+
+#╔════════════════════╗
+#║ ● Errors Message ● ║
+#╚════════════════════╝
+errors:
+    console: "%prefix% &8&l(&4&l!&8&l)&r &cThis command cannot be executed from the console!"
+    no-permission: "%prefix% &8&l(&4&l!&8&l)&r &cYou don't have permission to execute this command!"
+    no-args-get: "%prefix% &8&l(&4&l!&8&l)&r &eUnknown args! &7Please use the command &c/exampleplugin <author/version>"
+
+#╔══════════════════╗
+#║ ● Join Message ● ║
+#╚══════════════════╝
+join:
+    enabled: true
+    message: "&aHello &e%display_name% &athis is example message join"
+
+#╔═════════════════════════╗
+#║ ● Server Info Message ● ║
+#╚═════════════════════════╝
+server-info:
+    enabled: true
+    message: "%prefix% &7Version server: &e%server_version% &7version plugin: &e%version% &7version api plugin: &e%server_api_version%"
