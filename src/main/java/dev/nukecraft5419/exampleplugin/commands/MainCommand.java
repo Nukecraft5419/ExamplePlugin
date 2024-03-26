@@ -30,7 +30,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class MainCommand implements CommandExecutor {
     private ExamplePlugin plugin;
@@ -44,8 +45,8 @@ public class MainCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 
-        // Console
         if (!(sender instanceof Player)) {
+            // Console
             sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsConsole().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
             return true;
         }
@@ -81,7 +82,8 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
             return;
         }
-        sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginHello().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+        Player player = (Player) sender;
+        sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginHello().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%display_name%", player.getDisplayName())));
     }
 
     public void subcommandHelp(CommandSender sender) {
@@ -89,7 +91,10 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
             return;
         }
-        //sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginHelp().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+        List<String> messages = plugin.getMainConfigManager().getPluginHelp();
+        for (String m : messages) {
+            sender.sendMessage(MessagesUtils.getColorMessage(m.replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+        }
     }
 
     public void subcommandGet(CommandSender sender, String[] args) {
@@ -105,10 +110,10 @@ public class MainCommand implements CommandExecutor {
         }
         if (args[1].equalsIgnoreCase("author")) {
             // ExamplePlugin get author
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginAuthor().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%author_plugin%", authorPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginAuthor().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%author%", authorPlugin)));
         } else if (args[1].equalsIgnoreCase("version")) {
             // ExamplePlugin get version
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginVersion().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%version_plugin%", versionPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginVersion().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%version%", versionPlugin)));
         } else {
             // ExamplePlugin get
             sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoArgsGet().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));

@@ -42,15 +42,15 @@
 #║ ● Plugin Message ● ║
 #╚════════════════════╝
 plugin:
-    prefix: "&a&lExamplePlugin &8»"
-    hello: "&eHello &c%displayname%!"
-    author: "%prefix% &7The author of the plugin is: &a%author%"
-    version: "%prefix% &7The version of the plugin is the: &6v%version%"
+    prefix: "&6&lExamplePlugin &8»"
+    hello: "&aHello &e%display_name%!"
+    author: "%prefix% &7The author of the plugin is: &e%author%"
+    version: "%prefix% &7The version of the plugin is the: &ev%version%"
     reload: "%prefix% &7The plugin has been reloaded!"
     help:
-        - "&8&m-------&r&8[&a&lExamplePlugin&8]&m-------"
+        - "&8&m-------&r&8[&6&lExamplePlugin&8]&m-------"
         - "&7- &c/exampleplugin help &7- &eShow help"
-        -  "&7- &c/exampleplugin hello &7- &eShow hello"
+        - "&7- &c/exampleplugin hello &7- &eShow hello"
         - "&7- &c/exampleplugin get &7- &eShow <author/version>"
         - "&7- &c/exampleplugin reload &7- &eReload plugin"
         - "&8&m-----------------------------------------"
@@ -61,18 +61,18 @@ plugin:
 errors:
     console: "%prefix% &8&l(&4&l!&8&l)&r &cThis command cannot be executed from the console!"
     no-permission: "%prefix% &8&l(&4&l!&8&l)&r &cYou don't have permission to execute this command!"
-    no-args-get: "%prefix% &8&l(&4&l!&8&l)&r &eUnknown args! Please use the command &7/exampleplugin <author/version>"
+    no-args-get: "%prefix% &8&l(&4&l!&8&l)&r &eUnknown args! &7Please use the command &c/exampleplugin <author/version>"
 
 #╔══════════════════╗
 #║ ● Join Message ● ║
 #╚══════════════════╝
 join:
     enabled: true
-    message: "&eHello &c%displayname% &6this is example message join"
+    message: "&aHello &e%display_name% &athis is example message join"
 
 #╔═════════════════════════╗
 #║ ● Server Info Message ● ║
 #╚═════════════════════════╝
 server-info:
     enabled: true
-    message: "%prefix% &bVersion server: &6%server_version% &bversion plugin: &c%plugin_version% &bversion api plugin: &a%api_version%"
+    message: "%prefix% &7Version server: &e%server_version% &7version plugin: &e%version% &7version api plugin: &e%server_api_version%"
