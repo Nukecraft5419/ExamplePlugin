@@ -1,0 +1,21 @@
+metadata.format.version = "1.1"
+
+[versions]
+
+# Platforms
+spigot = "1.20.4-R0.1-SNAPSHOT"
+miniMessage = "4.26.1"
+
+# Plugins
+shadowJar = "9.3.1"
+runPaper = "3.0.2"
+
+[libraries]
+
+spigot = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
+miniMessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "miniMessage" }
+
+[plugins]
+
+shadowJar = { id = "com.gradleup.shadow", version.ref = "shadowJar" }
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }

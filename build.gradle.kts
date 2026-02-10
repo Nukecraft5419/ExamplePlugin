@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.0"
-    id("xyz.jpenilla.run-paper") version "3.0.2"
+    alias(libs.plugins.shadowJar) // ShadowJar
+    alias(libs.plugins.runPaper) // Run Paper
 }
 
 group = "dev.nukecraft5419"
@@ -18,8 +18,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
-    implementation("net.kyori:adventure-text-minimessage:4.16.0")
+    compileOnly(libs.spigot)
+    implementation(libs.miniMessage) // MiniMessage-API
 }
 
 tasks {
