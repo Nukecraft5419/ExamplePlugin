@@ -4,8 +4,7 @@ plugins {
     alias(libs.plugins.runPaper) // Run Paper
 }
 
-group = "dev.nukecraft5419"
-version = "1.0.0"
+group to project.property("group")
 
 repositories {
     mavenCentral()
@@ -46,7 +45,14 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<ProcessResources>().configureEach {
-    val props = mapOf("version" to version)
+    val props = mapOf(
+      "name" to project.property("name"),
+      "main" to project.property("main"),
+      "version" to project.property("version"),
+      "description" to project.property("description"),
+      "author" to project.property("author"),
+      "apiVersion" to project.property("apiVersion"),
+    )
     inputs.properties(props)
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
