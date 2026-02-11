@@ -24,24 +24,31 @@
 package dev.nukecraft5419.exampleplugin.api;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class ExamplePluginAPI {
     private static ExamplePlugin plugin;
+    private static MainConfigManager mainConfigManager;
     private static final Server server = Bukkit.getServer();
 
     public ExamplePluginAPI(ExamplePlugin plugin) {
         ExamplePluginAPI.plugin = plugin;
+        mainConfigManager = new MainConfigManager(plugin);
     }
 
     public static String getVersionPlugin() {
-        return  plugin.getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     public static String getName() {
         return plugin.getDescription().getAuthors().get(0);
+    }
+
+    public static MainConfigManager getMainConfigManager() {
+        return mainConfigManager;
     }
 
     public static String getServerApiVersion(){

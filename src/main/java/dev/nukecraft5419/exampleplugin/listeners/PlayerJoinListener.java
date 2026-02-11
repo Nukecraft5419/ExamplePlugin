@@ -46,14 +46,14 @@ public class PlayerJoinListener implements Listener {
         String serverVersion = ExamplePluginAPI.getServerVersion();
         String versionPlugin = ExamplePluginAPI.getVersionPlugin();
         String serverApiVersion = ExamplePluginAPI.getServerApiVersion();
-        MainConfigManager mainConfigManager = plugin.getMainConfigManager();
+        MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
         if (mainConfigManager.getJoinMessageEnabled()) {
             player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getJoinMessage().replace("%display_name%", displayName)));
         }
 
         if (mainConfigManager.getServerInfoMessageEnabled()) {
-            player.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getServerInfoMessage().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%server_version%", serverVersion).replace("%version%", versionPlugin).replace("%server_api_version%", serverApiVersion)));
+            player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getServerInfoMessage().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%server_version%", serverVersion).replace("%version%", versionPlugin).replace("%server_api_version%", serverApiVersion)));
         }
     }
 }

@@ -25,6 +25,7 @@ package dev.nukecraft5419.exampleplugin.commands;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,6 +38,7 @@ public class MainCommand implements CommandExecutor {
     private ExamplePlugin plugin;
     private String versionPlugin = ExamplePluginAPI.getVersionPlugin();
     private String authorPlugin = ExamplePluginAPI.getName();
+    MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
     public MainCommand(ExamplePlugin plugin) {
         this.plugin = plugin;
@@ -47,7 +49,7 @@ public class MainCommand implements CommandExecutor {
 
         if (!(sender instanceof Player)) {
             // Console
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsConsole().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsConsole().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return true;
         }
 
@@ -79,54 +81,54 @@ public class MainCommand implements CommandExecutor {
     // ExamplePlugin reload
     public void subcommandHello(CommandSender sender) {
         if (!sender.hasPermission("exampleplugin.commands.hello")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
         Player player = (Player) sender;
-        sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginHello().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%display_name%", player.getDisplayName())));
+        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginHello().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%display_name%", player.getDisplayName())));
     }
 
     public void subcommandHelp(CommandSender sender) {
         if (!sender.hasPermission("exampleplugin.commands.help")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
-        List<String> messages = plugin.getMainConfigManager().getPluginHelp();
+        List<String> messages = mainConfigManager.getPluginHelp();
         for (String m : messages) {
-            sender.sendMessage(MessagesUtils.getColorMessage(m.replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(m.replace("%prefix%", mainConfigManager.getPluginPrefix())));
         }
     }
 
     public void subcommandGet(CommandSender sender, String[] args) {
         // ExamplePlugin get permission
         if (!sender.hasPermission("exampleplugin.commands.get")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
         if (args.length == 1) {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoArgsGet().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
         if (args[1].equalsIgnoreCase("author")) {
             // ExamplePlugin get author
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginAuthor().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%author%", authorPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginAuthor().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%author%", authorPlugin)));
         } else if (args[1].equalsIgnoreCase("version")) {
             // ExamplePlugin get version
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginVersion().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix()).replace("%version%", versionPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginVersion().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%version%", versionPlugin)));
         } else {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoArgsGet().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet().replace("%prefix%", mainConfigManager.getPluginPrefix())));
         }
     }
 
     // ExamplePlugin reload
     public void subcommandReload(CommandSender sender) {
         if (!sender.hasPermission("exampleplugin.commands.reload")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getErrorsNoPermission().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
-        plugin.getMainConfigManager().reloadConfig();
-        sender.sendMessage(MessagesUtils.getColorMessage(plugin.getMainConfigManager().getPluginReload().replace("%prefix%", plugin.getMainConfigManager().getPluginPrefix())));
+        mainConfigManager.reloadConfig();
+        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginReload().replace("%prefix%", mainConfigManager.getPluginPrefix())));
     }
 }
