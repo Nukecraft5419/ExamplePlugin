@@ -34,19 +34,26 @@ public class ExamplePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         // Plugin startup logic
-        new ExamplePluginAPI(this);
+        ExamplePluginAPI.register(this);
+
         // Register commands
         registerCommands();
+
         // Register events
         registerEvents();
+
         ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &asuccessfully enabled!".replace("%prefix%", ExamplePluginAPI.getMainConfigManager().getPluginPrefix())));
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+
         ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &cwas successfully disabled!".replace("%prefix%", ExamplePluginAPI.getMainConfigManager().getPluginPrefix())));
+
+        // Plugin shutdown logic
+        ExamplePluginAPI.unregister();
     }
 
     public void registerCommands() {

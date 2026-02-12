@@ -28,40 +28,144 @@ import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Global API entry point for ExamplePlugin.
+ * <p>
+ * Provides access to configuration managers, server utilities, and plugin metadata.
+ * Ensure the API is registered via {@link #register(ExamplePlugin)} before use.
+ */
 public class ExamplePluginAPI {
-    private static ExamplePlugin plugin;
-    private static MainConfigManager mainConfigManager;
+
+    private final ExamplePlugin plugin;
+    private static ExamplePluginAPI instance;
+    private final MainConfigManager mainConfigManager;
     private static final Server server = Bukkit.getServer();
 
-    public ExamplePluginAPI(ExamplePlugin plugin) {
-        ExamplePluginAPI.plugin = plugin;
-        mainConfigManager = new MainConfigManager(plugin);
+    /**
+     * Internal constructor to initialize the API instance.
+     *
+     * @param plugin The parent {@link ExamplePlugin} instance.
+     */
+    @ApiStatus.Internal
+    protected ExamplePluginAPI(@NotNull ExamplePlugin plugin) {
+        this.plugin = plugin;
+        this.mainConfigManager = new MainConfigManager(plugin);
     }
 
+    /**
+     * Retrieves the current active instance of the API.
+     *
+     * @return The {@link ExamplePluginAPI} instance.
+     * @throws NotRegisteredException If the API is accessed before registration.
+     */
+    @NotNull
+    public static ExamplePluginAPI getInstance() {
+        if (instance == null) {
+            throw new NotRegisteredException();
+        }
+        return instance;
+    }
+
+    /**
+     * Registers the API instance for global use.
+     * Called during the plugin's enable phase.
+     *
+     * @param plugin The {@link ExamplePlugin} to register.
+     */
+    @ApiStatus.Internal
+    public static void register(@NotNull ExamplePlugin plugin) {
+        instance = new ExamplePluginAPI(plugin);
+    }
+
+    /**
+     * Unregisters the API instance and cleans up references.
+     * Called during the plugin's disable phase to prevent memory leaks.
+     */
+    @ApiStatus.Internal
+    public static void unregister() {
+        instance = null;
+    }
+
+    /**
+     * Gets the current version of the plugin as defined in plugin.yml.
+     *
+     * @return The plugin version string.
+     */
+    @NotNull
     public static String getVersionPlugin() {
-        return plugin.getDescription().getVersion();
+        return getInstance().plugin.getDescription().getVersion();
     }
 
+    /**
+     * Gets the first author listed in the plugin description.
+     *
+     * @return The name of the primary author.
+     */
     public static String getName() {
-        return plugin.getDescription().getAuthors().get(0);
+        return getInstance().plugin.getDescription().getAuthors().getFirst();
     }
 
+    /**
+     * Provides access to the main configuration manager.
+     *
+     * @return The {@link MainConfigManager} instance.
+     */
     public static MainConfigManager getMainConfigManager() {
-        return mainConfigManager;
+        return getInstance().mainConfigManager;
     }
 
+    /**
+     * Gets the Minecraft API version the plugin is targeting.
+     *
+     * @return The API version (e.g., "1.21").
+     */
     public static String getServerApiVersion(){
-        return plugin.getDescription().getAPIVersion();
+        return getInstance().plugin.getDescription().getAPIVersion();
     }
 
+    /**
+     * Gets the server's console command sender.
+     *
+     * @return The {@link ConsoleCommandSender} instance.
+     */
+    @NotNull
     public static ConsoleCommandSender getServer() {
-        Server server = Bukkit.getServer();
         return server.getConsoleSender();
     }
 
+    /**
+     * Gets the full Bukkit version of the server.
+     *
+     * @return The server version string.
+     */
+    @NotNull
     public static String getServerVersion() {
-        String pkg = server.getClass().getPackage().getName();
-        return pkg.substring(pkg.lastIndexOf('.') + 1);
+        return Bukkit.getBukkitVersion();
+    }
+
+    /**
+     * Exception thrown when the API is accessed without being properly registered.
+     */
+    static final class NotRegisteredException extends IllegalStateException {
+
+        private static final String MESSAGE = """
+
+            [ExamplePlugin] API Access Error:
+            The API has not been registered yet. This usually happens because:
+
+            1. The plugin failed to load or is disabled.
+            2. You are accessing the API too early (e.g., in the constructor or onLoad).
+               -> Solution: Access the API only after or during the onEnable() phase.
+            3. The API was incorrectly shaded into your JAR.
+
+            Current Status: Not Registered / Instance is null.
+            """;
+
+        NotRegisteredException() {
+            super(MESSAGE);
+        }
     }
 }
