@@ -39,7 +39,7 @@ public class MainCommand implements CommandExecutor {
 
     private final ExamplePlugin plugin;
     private final String versionPlugin = ExamplePluginAPI.getVersionPlugin();
-    private final String authorPlugin = ExamplePluginAPI.getName();
+    private final String authorPlugin = ExamplePluginAPI.getAuthorPlugin();
     MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
     public MainCommand(@NotNull ExamplePlugin plugin) {

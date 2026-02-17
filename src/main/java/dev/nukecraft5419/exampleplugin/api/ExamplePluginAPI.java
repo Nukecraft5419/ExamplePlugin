@@ -105,7 +105,7 @@ public class ExamplePluginAPI {
      *
      * @return The name of the primary author.
      */
-    public static String getName() {
+    public static String getAuthorPlugin() {
         return getInstance().plugin.getDescription().getAuthors().getFirst();
     }
 
