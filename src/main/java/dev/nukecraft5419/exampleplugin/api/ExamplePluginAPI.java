@@ -66,6 +66,7 @@ public class ExamplePluginAPI {
         if (instance == null) {
             throw new NotRegisteredException();
         }
+
         return instance;
     }
 

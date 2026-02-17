@@ -31,16 +31,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerJoinListener implements Listener {
-    private ExamplePlugin plugin;
 
-    public PlayerJoinListener(ExamplePlugin plugin) {
+    private final ExamplePlugin plugin;
+
+    public PlayerJoinListener(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
+
         Player player = event.getPlayer();
         String displayName = player.getDisplayName();
         String serverVersion = ExamplePluginAPI.getServerVersion();

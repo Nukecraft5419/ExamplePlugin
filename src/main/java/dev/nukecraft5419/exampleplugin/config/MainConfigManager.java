@@ -25,19 +25,21 @@ package dev.nukecraft5419.exampleplugin.config;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MainConfigManager {
-    private ExamplePlugin plugin;
-    private CustomConfig configFile;
+
+    private final ExamplePlugin plugin;
+    private final CustomConfig configFile;
 
     // config
     private String pluginPrefix;
     private String pluginHello;
     private String pluginAuthor;
     private String pluginVersion;
-    private  String pluginReload;
+    private String pluginReload;
     private List<String> pluginHelp;
     private String errorsConsole;
     private String errorsNoPermission;
@@ -47,10 +49,9 @@ public class MainConfigManager {
     private Boolean serverInfoMessageEnabled;
     private String serverInfoMessage;
 
-
-
-    public MainConfigManager(ExamplePlugin plugin) {
+    public MainConfigManager(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
+
         configFile = new CustomConfig("config.yml", null, plugin);
         configFile.registerConfig();
         loadConfig();

@@ -31,30 +31,28 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MainCommand implements CommandExecutor {
-    private ExamplePlugin plugin;
-    private String versionPlugin = ExamplePluginAPI.getVersionPlugin();
-    private String authorPlugin = ExamplePluginAPI.getName();
+
+    private final ExamplePlugin plugin;
+    private final String versionPlugin = ExamplePluginAPI.getVersionPlugin();
+    private final String authorPlugin = ExamplePluginAPI.getName();
     MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
-    public MainCommand(ExamplePlugin plugin) {
+    public MainCommand(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             // Console
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsConsole().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return true;
         }
-
-        // Player
-        Player player = (Player) sender;
 
         // ExamplePlugin args[0] args[1] args[2]
         if (args.length >= 1) {
@@ -75,16 +73,17 @@ public class MainCommand implements CommandExecutor {
             // ExamplePlugin help
             subcommandHelp(sender);
         }
+
         return true;
     }
 
     // ExamplePlugin reload
     public void subcommandHello(CommandSender sender) {
+        Player player = (Player) sender;
         if (!sender.hasPermission("exampleplugin.commands.hello")) {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
-        Player player = (Player) sender;
         sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginHello().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%display_name%", player.getDisplayName())));
     }
 
@@ -93,6 +92,7 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
+
         List<String> messages = mainConfigManager.getPluginHelp();
         for (String m : messages) {
             sender.sendMessage(MessagesUtils.getColorMessage(m.replace("%prefix%", mainConfigManager.getPluginPrefix())));
@@ -105,11 +105,13 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
+
         if (args.length == 1) {
             // ExamplePlugin get
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet().replace("%prefix%", mainConfigManager.getPluginPrefix())));
             return;
         }
+
         if (args[1].equalsIgnoreCase("author")) {
             // ExamplePlugin get author
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginAuthor().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%author%", authorPlugin)));

@@ -27,18 +27,20 @@ import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 
 public class CustomConfig {
-    private ExamplePlugin plugin;
-    private String fileName;
+
+    private final ExamplePlugin plugin;
+    private final String fileName;
     private FileConfiguration fileConfiguration = null;
     private File file = null;
-    private String folderName;
+    private final String folderName;
 
-    public CustomConfig(String fileName, String folderName, ExamplePlugin plugin){
+    public CustomConfig(@NotNull String fileName, String folderName, @NotNull ExamplePlugin plugin){
         this.fileName = fileName;
         this.folderName = folderName;
         this.plugin = plugin;
@@ -49,16 +51,16 @@ public class CustomConfig {
     }
 
     public void registerConfig(){
-        if(folderName != null){
+        if (folderName != null){
             file = new File(plugin.getDataFolder() +File.separator + folderName,fileName);
-        }else{
+        } else {
             file = new File(plugin.getDataFolder(), fileName);
         }
 
-        if(!file.exists()){
-            if(folderName != null){
+        if (!file.exists()) {
+            if (folderName != null){
                 plugin.saveResource(folderName+File.separator+fileName, false);
-            }else{
+            } else {
                 plugin.saveResource(fileName, false);
             }
         }
@@ -84,24 +86,26 @@ public class CustomConfig {
         if (fileConfiguration == null) {
             reloadConfig();
         }
+
         return fileConfiguration;
     }
 
     public boolean reloadConfig() {
         if (fileConfiguration == null) {
-            if(folderName != null){
+            if (folderName != null) {
                 file = new File(plugin.getDataFolder() +File.separator + folderName, fileName);
-            }else{
+            } else {
                 file = new File(plugin.getDataFolder(), fileName);
             }
-
         }
+
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
 
-        if(file != null) {
+        if (file != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(file);
             fileConfiguration.setDefaults(defConfig);
         }
+
         return true;
     }
 }
