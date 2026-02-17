@@ -30,6 +30,8 @@ import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public class ExamplePlugin extends JavaPlugin {
 
     @Override
@@ -57,7 +59,7 @@ public class ExamplePlugin extends JavaPlugin {
     }
 
     public void registerCommands() {
-        this.getCommand("exampleplugin").setExecutor(new MainCommand(this));
+        Objects.requireNonNull(this.getCommand("exampleplugin")).setExecutor(new MainCommand(this));
     }
 
     private void addListener(Listener listener) {
