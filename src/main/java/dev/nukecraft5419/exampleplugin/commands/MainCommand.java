@@ -27,6 +27,7 @@ import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
+import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -78,7 +79,7 @@ public class MainCommand implements CommandExecutor {
     // ExamplePlugin reload
     public void subcommandHello(CommandSender sender) {
         Player player = (Player) sender;
-        if (!sender.hasPermission("exampleplugin.commands.hello")) {
+        if (!sender.hasPermission(PermissionsUtils.COMMAND_HELLO)) {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
@@ -86,7 +87,7 @@ public class MainCommand implements CommandExecutor {
     }
 
     public void subcommandHelp(CommandSender sender) {
-        if (!sender.hasPermission("exampleplugin.commands.help")) {
+        if (!sender.hasPermission(PermissionsUtils.COMMAND_HELP)) {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
@@ -99,7 +100,7 @@ public class MainCommand implements CommandExecutor {
 
     public void subcommandGet(CommandSender sender, String[] args) {
         // ExamplePlugin get permission
-        if (!sender.hasPermission("exampleplugin.commands.get")) {
+        if (!sender.hasPermission(PermissionsUtils.COMMAND_GET)) {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
@@ -124,7 +125,7 @@ public class MainCommand implements CommandExecutor {
 
     // ExamplePlugin reload
     public void subcommandReload(CommandSender sender) {
-        if (!sender.hasPermission("exampleplugin.commands.reload")) {
+        if (!sender.hasPermission(PermissionsUtils.COMMAND_RELOAD)) {
             sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
