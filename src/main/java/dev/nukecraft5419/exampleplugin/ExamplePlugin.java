@@ -46,13 +46,13 @@ public class ExamplePlugin extends JavaPlugin {
         // Register events
         registerEvents();
 
-        ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &asuccessfully enabled!".replace("%prefix%", ExamplePluginAPI.getMainConfigManager().getPluginPrefix())));
+        ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &asuccessfully enabled!"));
     }
 
     @Override
     public void onDisable() {
 
-        ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &cwas successfully disabled!".replace("%prefix%", ExamplePluginAPI.getMainConfigManager().getPluginPrefix())));
+        ExamplePluginAPI.getServer().sendMessage(MessagesUtils.getColorMessage("%prefix% &cwas successfully disabled!"));
 
         // Plugin shutdown logic
         ExamplePluginAPI.unregister();

@@ -23,11 +23,74 @@
  */
 package dev.nukecraft5419.exampleplugin.utils;
 
+import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Utility class for handling chat messages, color formatting, and placeholders.
+ */
 public class MessagesUtils {
 
+    static MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[a-zA-Z0-9_]+%");
+    private static final String version = ExamplePluginAPI.getVersionPlugin();
+    private static final String author = ExamplePluginAPI.getAuthorPlugin();
+    private static final String serverVersion = ExamplePluginAPI.getServerVersion();
+    private static final String serverVersionAPI = ExamplePluginAPI.getServerApiVersion();
+
+    /**
+     * Translates placeholders and color codes in a message.
+     *
+     * @param player  The player for context-based placeholders (like %display_name%), can be null.
+     * @param message The raw message string from the configuration.
+     * @return The formatted string with colors and replaced placeholders.
+     */
+    public static String getColorMessage(Player player, String message) {
+        if (message == null || message.isEmpty()) return "";
+
+        Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
+        StringBuilder builder = new StringBuilder();
+
+        while (matcher.find()) {
+            String placeholder = matcher.group();
+            String replacement = getReplacement (player, placeholder);
+            matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(builder);
+
+        return ChatColor.translateAlternateColorCodes('&', builder.toString());
+    }
+
+    /**
+     * Core logic for placeholder replacement.
+     * * @param player      The player context.
+     * @param placeholder The placeholder found (e.g., %prefix%).
+     * @return The replacement string or the placeholder itself if not found.
+     */
+    private static String getReplacement(Player player, String placeholder) {
+        return switch (placeholder) {
+            case "%prefix%" -> mainConfigManager.getPluginPrefix();
+            case "%version%" -> version;
+            case "%author%" -> author;
+            case "%display_name%" -> (player != null) ? player.getDisplayName() : "Console";
+            case "%server_version%" -> serverVersion;
+            case "%server_api_version%" -> serverVersionAPI;
+            default -> placeholder;
+        };
+    }
+
+    /**
+     * Shorthand for getColorMessage when no player context is available.
+     *
+     * @param message The raw message string.
+     * @return The formatted string.
+     */
     public static String getColorMessage(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return getColorMessage(null, message);
     }
 }

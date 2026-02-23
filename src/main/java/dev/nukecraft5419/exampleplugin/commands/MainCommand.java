@@ -38,8 +38,6 @@ import java.util.List;
 public class MainCommand implements CommandExecutor {
 
     private final ExamplePlugin plugin;
-    private final String versionPlugin = ExamplePluginAPI.getVersionPlugin();
-    private final String authorPlugin = ExamplePluginAPI.getAuthorPlugin();
     MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
     public MainCommand(@NotNull ExamplePlugin plugin) {
@@ -50,7 +48,7 @@ public class MainCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             // Console
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsConsole().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsConsole()));
             return true;
         }
 
@@ -81,56 +79,56 @@ public class MainCommand implements CommandExecutor {
     public void subcommandHello(CommandSender sender) {
         Player player = (Player) sender;
         if (!sender.hasPermission("exampleplugin.commands.hello")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
-        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginHello().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%display_name%", player.getDisplayName())));
+        sender.sendMessage(MessagesUtils.getColorMessage(player, mainConfigManager.getPluginHello()));
     }
 
     public void subcommandHelp(CommandSender sender) {
         if (!sender.hasPermission("exampleplugin.commands.help")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
 
         List<String> messages = mainConfigManager.getPluginHelp();
         for (String m : messages) {
-            sender.sendMessage(MessagesUtils.getColorMessage(m.replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(m));
         }
     }
 
     public void subcommandGet(CommandSender sender, String[] args) {
         // ExamplePlugin get permission
         if (!sender.hasPermission("exampleplugin.commands.get")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
 
         if (args.length == 1) {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet()));
             return;
         }
 
         if (args[1].equalsIgnoreCase("author")) {
             // ExamplePlugin get author
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginAuthor().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%author%", authorPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginAuthor()));
         } else if (args[1].equalsIgnoreCase("version")) {
             // ExamplePlugin get version
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginVersion().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%version%", versionPlugin)));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginVersion()));
         } else {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet()));
         }
     }
 
     // ExamplePlugin reload
     public void subcommandReload(CommandSender sender) {
         if (!sender.hasPermission("exampleplugin.commands.reload")) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
             return;
         }
         mainConfigManager.reloadConfig();
-        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginReload().replace("%prefix%", mainConfigManager.getPluginPrefix())));
+        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginReload()));
     }
 }

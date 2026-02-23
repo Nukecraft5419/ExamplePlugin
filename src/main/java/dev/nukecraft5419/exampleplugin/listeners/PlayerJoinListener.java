@@ -45,18 +45,14 @@ public class PlayerJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
-        String displayName = player.getDisplayName();
-        String serverVersion = ExamplePluginAPI.getServerVersion();
-        String versionPlugin = ExamplePluginAPI.getVersionPlugin();
-        String serverApiVersion = ExamplePluginAPI.getServerApiVersion();
         MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
 
         if (mainConfigManager.getJoinMessageEnabled()) {
-            player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getJoinMessage().replace("%display_name%", displayName)));
+            player.sendMessage(MessagesUtils.getColorMessage(player, mainConfigManager.getJoinMessage()));
         }
 
         if (mainConfigManager.getServerInfoMessageEnabled()) {
-            player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getServerInfoMessage().replace("%prefix%", mainConfigManager.getPluginPrefix()).replace("%server_version%", serverVersion).replace("%version%", versionPlugin).replace("%server_api_version%", serverApiVersion)));
+            player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getServerInfoMessage()));
         }
     }
 }
