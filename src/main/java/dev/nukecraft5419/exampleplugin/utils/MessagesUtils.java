@@ -36,12 +36,7 @@ import java.util.regex.Pattern;
  */
 public class MessagesUtils {
 
-    static MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[a-zA-Z0-9_]+%");
-    private static final String version = ExamplePluginAPI.getVersionPlugin();
-    private static final String author = ExamplePluginAPI.getAuthorPlugin();
-    private static final String serverVersion = ExamplePluginAPI.getServerVersion();
-    private static final String serverVersionAPI = ExamplePluginAPI.getServerApiVersion();
 
     /**
      * Translates placeholders and color codes in a message.
@@ -73,24 +68,16 @@ public class MessagesUtils {
      * @return The replacement string or the placeholder itself if not found.
      */
     private static String getReplacement(Player player, String placeholder) {
+        MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
+
         return switch (placeholder) {
-            case "%prefix%" -> mainConfigManager.getPluginPrefix();
-            case "%version%" -> version;
-            case "%author%" -> author;
+            case "%prefix%" -> config.getPluginPrefix();
+            case "%version%" -> ExamplePluginAPI.getVersionPlugin();
+            case "%author%" -> ExamplePluginAPI.getAuthorPlugin();
             case "%display_name%" -> (player != null) ? player.getDisplayName() : "Console";
-            case "%server_version%" -> serverVersion;
-            case "%server_api_version%" -> serverVersionAPI;
+            case "%server_version%" -> ExamplePluginAPI.getServerVersion();
+            case "%server_api_version%" -> ExamplePluginAPI.getServerApiVersion();
             default -> placeholder;
         };
-    }
-
-    /**
-     * Shorthand for getColorMessage when no player context is available.
-     *
-     * @param message The raw message string.
-     * @return The formatted string.
-     */
-    public static String getColorMessage(String message) {
-        return getColorMessage(null, message);
     }
 }

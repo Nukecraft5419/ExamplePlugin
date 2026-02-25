@@ -26,7 +26,7 @@ package dev.nukecraft5419.exampleplugin.listeners;
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
-import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
+import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,14 +45,14 @@ public class PlayerJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
-        MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
+        MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
-        if (mainConfigManager.getJoinMessageEnabled()) {
-            player.sendMessage(MessagesUtils.getColorMessage(player, mainConfigManager.getJoinMessage()));
+        if (config.getJoinMessageEnabled()) {
+            SendUtils.sendMessage(player, config.getJoinMessage());
         }
 
-        if (mainConfigManager.getServerInfoMessageEnabled()) {
-            player.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getServerInfoMessage()));
+        if (config.getServerInfoMessageEnabled()) {
+            SendUtils.sendMessage(player, config.getServerInfoMessage());
         }
     }
 }

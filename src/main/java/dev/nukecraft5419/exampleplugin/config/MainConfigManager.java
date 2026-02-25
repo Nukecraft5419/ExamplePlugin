@@ -29,26 +29,39 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * Manages the main configuration file of the plugin.
+ * Handles loading, reloading, and provides access to settings via getters.
+ */
 public class MainConfigManager {
 
     private final ExamplePlugin plugin;
     private final CustomConfig configFile;
 
-    // config
+    // --- [ Plugin Information ] ---
     private String pluginPrefix;
     private String pluginHello;
     private String pluginAuthor;
     private String pluginVersion;
     private String pluginReload;
     private List<String> pluginHelp;
+
+    // --- [ Error Messages ] ---
     private String errorsConsole;
     private String errorsNoPermission;
     private String errorsNoArgsGet;
+
+    // --- [ Feature Settings ] ---
     private Boolean joinMessageEnabled;
     private String joinMessage;
     private Boolean serverInfoMessageEnabled;
     private String serverInfoMessage;
 
+    /**
+     * Initializes the manager and loads the configuration data.
+     *
+     * @param plugin The main class instance of the plugin.
+     */
     public MainConfigManager(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
 
@@ -57,78 +70,107 @@ public class MainConfigManager {
         loadConfig();
     }
 
+    /**
+     * Loads raw values from the FileConfiguration into memory.
+     * Note: Formatting and placeholders are handled at the time of sending.
+     */
     public void loadConfig() {
         FileConfiguration config = configFile.getConfig();
 
-        pluginPrefix = config.getString("plugin.prefix");
-        pluginHello = config.getString("plugin.hello");
-        pluginAuthor = config.getString("plugin.author");
-        pluginVersion = config.getString("plugin.version");
-        pluginReload = config.getString("plugin.reload");
-        pluginHelp = config.getStringList("plugin.help");
-        errorsConsole = config.getString("errors.console");
-        errorsNoPermission = config.getString("errors.no-permission");
-        errorsNoArgsGet = config.getString("errors.no-args-get");
-        joinMessageEnabled = config.getBoolean("join.enabled");
-        joinMessage = config.getString("join.message");
-        serverInfoMessageEnabled = config.getBoolean("server-info.enabled");
-        serverInfoMessage = config.getString("server-info.message");
+        // Loading Plugin Section
+        this.pluginPrefix = config.getString("plugin.prefix");
+        this.pluginHello = config.getString("plugin.hello");
+        this.pluginAuthor = config.getString("plugin.author");
+        this.pluginVersion = config.getString("plugin.version");
+        this.pluginReload = config.getString("plugin.reload");
+        this.pluginHelp = config.getStringList("plugin.help");
+
+        // Loading Errors Section
+        this.errorsConsole = config.getString("errors.console");
+        this.errorsNoPermission = config.getString("errors.no-permission");
+        this.errorsNoArgsGet = config.getString("errors.no-args-get");
+
+        // Loading Join Settings
+        this.joinMessageEnabled = config.getBoolean("join.enabled");
+        this.joinMessage = config.getString("join.message");
+
+        // Loading Server Info Settings
+        this.serverInfoMessageEnabled = config.getBoolean("server-info.enabled");
+        this.serverInfoMessage = config.getString("server-info.message");
     }
 
+    /**
+     * Synchronizes the memory with the disk by reloading the file.
+     */
     public void reloadConfig() {
-        configFile.reloadConfig();
-        loadConfig();
+        this.configFile.reloadConfig();
+        this.loadConfig();
     }
 
+    // --- [ Getters ] ---
+
+    /** @return The prefix used in most plugin messages. */
     public String getPluginPrefix() {
-        return pluginPrefix;
+        return this.pluginPrefix;
     }
 
+    /** @return The greeting message. */
     public String getPluginHello() {
-        return pluginHello;
+        return this.pluginHello;
     }
 
+    /** @return The author's name as defined in config. */
     public String getPluginAuthor() {
-        return pluginAuthor;
+        return this.pluginAuthor;
     }
 
+    /** @return The internal version string. */
     public String getPluginVersion() {
-        return pluginVersion;
+        return this.pluginVersion;
     }
 
+    /** @return The message sent upon configuration reload. */
     public String getPluginReload() {
-        return pluginReload;
+        return this.pluginReload;
     }
 
+    /** @return The list of strings for the help command. */
     public List<String> getPluginHelp() {
-        return pluginHelp;
+        return this.pluginHelp;
     }
 
+    /** @return Message for console-only command errors. */
     public String getErrorsConsole() {
-        return errorsConsole;
+        return this.errorsConsole;
     }
 
+    /** @return Message for permission denial. */
     public String getErrorsNoPermission() {
-        return errorsNoPermission;
+        return this.errorsNoPermission;
     }
 
+    /** @return Message for incorrect command usage. */
     public String getErrorsNoArgsGet() {
-        return errorsNoArgsGet;
+        return this.errorsNoArgsGet;
     }
 
+    /** @return Whether the join message feature is active. */
     public Boolean getJoinMessageEnabled() {
-        return joinMessageEnabled;
+        return this.joinMessageEnabled;
     }
 
+    /** @return The message sent when a player joins. */
     public String getJoinMessage() {
-        return joinMessage;
+        return this.joinMessage;
     }
 
+    /** @return Whether the server info feature is active. */
     public Boolean getServerInfoMessageEnabled() {
-        return serverInfoMessageEnabled;
+        return this.serverInfoMessageEnabled;
     }
 
+    /** @return The informational message about the server. */
     public String getServerInfoMessage() {
-        return serverInfoMessage;
+        return this.serverInfoMessage;
     }
 }

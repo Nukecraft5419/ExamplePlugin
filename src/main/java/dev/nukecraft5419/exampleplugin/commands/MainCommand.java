@@ -26,20 +26,18 @@ package dev.nukecraft5419.exampleplugin.commands;
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
-import dev.nukecraft5419.exampleplugin.utils.MessagesUtils;
 import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
+import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class MainCommand implements CommandExecutor {
 
     private final ExamplePlugin plugin;
-    MainConfigManager mainConfigManager = ExamplePluginAPI.getMainConfigManager();
+    MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
     public MainCommand(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
@@ -49,7 +47,7 @@ public class MainCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             // Console
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsConsole()));
+            SendUtils.sendMessage(sender, config.getErrorsConsole());
             return true;
         }
 
@@ -78,58 +76,53 @@ public class MainCommand implements CommandExecutor {
 
     // ExamplePlugin reload
     public void subcommandHello(CommandSender sender) {
-        Player player = (Player) sender;
         if (!sender.hasPermission(PermissionsUtils.COMMAND_HELLO)) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
+            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
             return;
         }
-        sender.sendMessage(MessagesUtils.getColorMessage(player, mainConfigManager.getPluginHello()));
+        SendUtils.sendMessage(sender, config.getPluginHello());
     }
 
     public void subcommandHelp(CommandSender sender) {
         if (!sender.hasPermission(PermissionsUtils.COMMAND_HELP)) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
+            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
             return;
         }
-
-        List<String> messages = mainConfigManager.getPluginHelp();
-        for (String m : messages) {
-            sender.sendMessage(MessagesUtils.getColorMessage(m));
-        }
+        SendUtils.sendMessages(sender, config.getPluginHelp());
     }
 
     public void subcommandGet(CommandSender sender, String[] args) {
         // ExamplePlugin get permission
         if (!sender.hasPermission(PermissionsUtils.COMMAND_GET)) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
+            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
             return;
         }
 
         if (args.length == 1) {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet()));
+            SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
             return;
         }
 
         if (args[1].equalsIgnoreCase("author")) {
             // ExamplePlugin get author
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginAuthor()));
+            SendUtils.sendMessage(sender, config.getPluginAuthor());
         } else if (args[1].equalsIgnoreCase("version")) {
             // ExamplePlugin get version
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginVersion()));
+            SendUtils.sendMessage(sender, config.getPluginVersion());
         } else {
             // ExamplePlugin get
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoArgsGet()));
+            SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
         }
     }
 
     // ExamplePlugin reload
     public void subcommandReload(CommandSender sender) {
         if (!sender.hasPermission(PermissionsUtils.COMMAND_RELOAD)) {
-            sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getErrorsNoPermission()));
+            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
             return;
         }
-        mainConfigManager.reloadConfig();
-        sender.sendMessage(MessagesUtils.getColorMessage(mainConfigManager.getPluginReload()));
+        config.reloadConfig();
+        SendUtils.sendMessage(sender, config.getPluginReload());
     }
 }
