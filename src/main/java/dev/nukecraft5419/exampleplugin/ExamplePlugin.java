@@ -28,6 +28,7 @@ import dev.nukecraft5419.exampleplugin.commands.MainCommand;
 import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,8 +37,14 @@ import java.util.Objects;
 
 public class ExamplePlugin extends JavaPlugin {
 
+    private static final int BSTATS_ID = 29819;
+
     @Override
     public void onEnable() {
+
+        // You can find the plugin id of your plugins on
+        // the page https://bstats.org/what-is-my-plugin-id
+        new Metrics(this, BSTATS_ID);
 
         // Plugin startup logic
         ExamplePluginAPI.register(this);

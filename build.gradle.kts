@@ -23,6 +23,7 @@ dependencies {
     compileOnly(libs.spigot) // Spigot API
     compileOnly(libs.placeholderApi) // Placeholder API
     implementation(libs.miniMessage) // MiniMessage API
+    implementation(libs.bStats) // bStats API
 }
 
 tasks {
@@ -38,6 +39,19 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(25)
   }
+}
+
+tasks.shadowJar {
+  configurations = project.configurations.runtimeClasspath.map { setOf(it) }
+
+  dependencies {
+    // Only merge bStats into the final jar, no other dependencies
+    exclude { it.moduleGroup != "org.bstats" }
+  }
+
+  // Relocate bStats into the plugin's package to avoid conflicts with other
+  // plugins using bStats
+  relocate("org.bstats", "${project.group}.libs.bStats")
 }
 
 tasks.build {
