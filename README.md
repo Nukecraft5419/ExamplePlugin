@@ -17,13 +17,13 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [x] **Core System**: Basic plugin configuration and Lifecycle management.
 - [x] **Optimization**: Lean and minimal code (~17 KB).
 - [x] **bStats**: Integration for monitoring anonymous statistics.
+- [ ] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
 
 ### In Progress / To Do
 - [ ] **TabCompleter**: Implementation for a better UX in commands.
 - [ ] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
 - [ ] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
 - [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
-- [ ] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
 
 ## 💡 Technical Notes
 
