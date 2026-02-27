@@ -14,11 +14,15 @@ repositories {
     maven ("https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
+    maven("https://repo.extendedclip.com/releases/") {
+        name = "placeholder-api"
+    }
 }
 
 dependencies {
-    compileOnly(libs.spigot)
-    implementation(libs.miniMessage) // MiniMessage-API
+    compileOnly(libs.spigot) // Spigot API
+    compileOnly(libs.placeholderApi) // Placeholder API
+    implementation(libs.miniMessage) // MiniMessage API
 }
 
 tasks {
