@@ -17,7 +17,7 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [x] **Core System**: Basic plugin configuration and Lifecycle management.
 - [x] **Optimization**: Lean and minimal code (~17 KB).
 - [x] **bStats**: Integration for monitoring anonymous statistics.
-- [ ] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
+- [x] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
 
 ### In Progress / To Do
 - [ ] **TabCompleter**: Implementation for a better UX in commands.
