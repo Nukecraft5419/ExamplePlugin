@@ -41,8 +41,13 @@ java {
   }
 }
 
+tasks.jar {
+  enabled = false
+}
+
 tasks.shadowJar {
   configurations = project.configurations.runtimeClasspath.map { setOf(it) }
+  archiveClassifier.set("")
 
   dependencies {
     // Only merge bStats into the final jar, no other dependencies
