@@ -33,8 +33,8 @@
 # Variables that can be used
 # %prefix% - The prefix of the plugin
 # %author% - The author of the plugin
-# %version% - The version of the plugin
-# %display_name% - The display name of the player
+# %ep_version% - The version of the plugin
+# %ep_name% - The display name of the player
 # %server_version% - The version of the server
 # %server_api_version% - The version of the api of the server
 
@@ -43,9 +43,9 @@
 #╚════════════════════╝
 plugin:
     prefix: "&6&lExamplePlugin &8»"
-    hello: "&aHello &e%display_name%!"
+    hello: "&aHello &e%ep_name%!"
     author: "%prefix% &7The author of the plugin is: &e%author%"
-    version: "%prefix% &7The version of the plugin is the: &ev%version%"
+    version: "%prefix% &7The version of the plugin is the: &ev%ep_version%"
     reload: "%prefix% &7The plugin has been reloaded!"
     help:
         - "&8&m-------&r&8[&6&lExamplePlugin&8]&m-------"
@@ -68,11 +68,11 @@ errors:
 #╚══════════════════╝
 join:
     enabled: true
-    message: "&aHello &e%display_name% &athis is example message join"
+    message: "&aHello &e%ep_name% &athis is example message join"
 
 #╔═════════════════════════╗
 #║ ● Server Info Message ● ║
 #╚═════════════════════════╝
 server-info:
     enabled: true
-    message: "%prefix% &7Version server: &e%server_version% &7version plugin: &e%version% &7version api plugin: &e%server_api_version%"
+    message: "%prefix% &7Version server: &e%server_version% &7version plugin: &e%ep_version% &7version api plugin: &e%server_api_version%"

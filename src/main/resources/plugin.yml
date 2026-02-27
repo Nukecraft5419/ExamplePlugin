@@ -4,6 +4,7 @@ version: "${version}"
 description: "${description}"
 author: "${author}"
 api-version: "${apiVersion}"
+depend: [PlaceholderAPI]
 commands:
     exampleplugin:
         description: Main command for the plugin

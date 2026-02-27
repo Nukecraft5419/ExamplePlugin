@@ -25,6 +25,8 @@ package dev.nukecraft5419.exampleplugin.utils;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
+import dev.nukecraft5419.exampleplugin.hooks.PlaceholderManager;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -41,19 +43,21 @@ public class MessagesUtils {
     /**
      * Translates placeholders and color codes in a message.
      *
-     * @param player  The player for context-based placeholders (like %display_name%), can be null.
+     * @param player  The player for context-based placeholders (like %ep_name%), can be null.
      * @param message The raw message string from the configuration.
      * @return The formatted string with colors and replaced placeholders.
      */
     public static String getColorMessage(Player player, String message) {
         if (message == null || message.isEmpty()) return "";
 
+        message = PlaceholderAPI.setPlaceholders(player, message);
+
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
         StringBuilder builder = new StringBuilder();
 
         while (matcher.find()) {
             String placeholder = matcher.group();
-            String replacement = getReplacement (player, placeholder);
+            String replacement = getReplacement(player, placeholder);
             matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(builder);
@@ -62,22 +66,42 @@ public class MessagesUtils {
     }
 
     /**
-     * Core logic for placeholder replacement.
-     * * @param player      The player context.
+     * Core logic for internal placeholder replacement.
+     *
+     * @param player      The player context.
      * @param placeholder The placeholder found (e.g., %prefix%).
      * @return The replacement string or the placeholder itself if not found.
      */
     private static String getReplacement(Player player, String placeholder) {
         MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
-        return switch (placeholder) {
-            case "%prefix%" -> config.getPluginPrefix();
-            case "%version%" -> ExamplePluginAPI.getVersionPlugin();
-            case "%author%" -> ExamplePluginAPI.getAuthorPlugin();
-            case "%display_name%" -> (player != null) ? player.getDisplayName() : "Console";
-            case "%server_version%" -> ExamplePluginAPI.getServerVersion();
-            case "%server_api_version%" -> ExamplePluginAPI.getServerApiVersion();
-            default -> placeholder;
-        };
+        // Handle your internal placeholders first
+        switch (placeholder.toLowerCase()) {
+            case "%prefix%":
+                return config.getPluginPrefix();
+
+            case "%author%":
+                return ExamplePluginAPI.getAuthorPlugin();
+
+            case "%server_version%":
+                return ExamplePluginAPI.getServerVersion();
+
+            case "%server_api_version%":
+                return ExamplePluginAPI.getServerApiVersion();
+        }
+
+        // For any other placeholder, try to use the central PlaceholderManager
+        // We strip the '%' (e.g., %ep_version% -> version)
+        if (placeholder.length() > 2) {
+            String identifier = placeholder.substring(1, placeholder.length() - 1);
+            String value = PlaceholderManager.get(player, identifier);
+
+            if (value != null) {
+                return value;
+            }
+        }
+
+        // If no match is found, return the original placeholder string
+        return placeholder;
     }
 }

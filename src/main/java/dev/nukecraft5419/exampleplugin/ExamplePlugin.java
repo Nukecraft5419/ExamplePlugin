@@ -25,8 +25,10 @@ package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.MainCommand;
+import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,13 +42,22 @@ public class ExamplePlugin extends JavaPlugin {
         // Plugin startup logic
         ExamplePluginAPI.register(this);
 
-        // Register commands
-        registerCommands();
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 
-        // Register events
-        registerEvents();
+            new PlaceholderHook(this).register();
 
-        SendUtils.log("%prefix% &asuccessfully enabled!");
+            // Register commands
+            registerCommands();
+
+            // Register events
+            registerEvents();
+
+            SendUtils.log("%prefix% &asuccessfully enabled!");
+
+        } else {
+            SendUtils.log("&cCould not find PlaceholderAPI! This plugin is required.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
