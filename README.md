@@ -23,6 +23,7 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [ ] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
 - [ ] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
 - [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
+- [ ] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
 
 ## 💡 Technical Notes
 
