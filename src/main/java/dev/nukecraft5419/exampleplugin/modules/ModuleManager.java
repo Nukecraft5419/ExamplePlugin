@@ -69,4 +69,14 @@ public class ModuleManager {
         }
         modules.clear();
     }
+
+    /**
+     * Registers a new module to be managed by the ModuleManager.
+     * Modules must be registered before calling {@link #loadModules()}.
+     *
+     * @param module The PluginModule instance to register.
+     */
+    public void registerModule(PluginModule module) {
+        this.modules.add(module);
+    }
 }

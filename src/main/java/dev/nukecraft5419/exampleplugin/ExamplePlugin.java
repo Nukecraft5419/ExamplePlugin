@@ -24,20 +24,20 @@
 package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
-import dev.nukecraft5419.exampleplugin.commands.MainCommand;
 import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
+import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
+import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
-
 public class ExamplePlugin extends JavaPlugin {
 
     private static final int BSTATS_ID = 29819;
+    private ModuleManager moduleManager;
 
     @Override
     public void onEnable() {
@@ -46,15 +46,23 @@ public class ExamplePlugin extends JavaPlugin {
         // the page https://bstats.org/what-is-my-plugin-id
         new Metrics(this, BSTATS_ID);
 
-        // Plugin startup logic
+        // Register the plugin API
         ExamplePluginAPI.register(this);
 
+        // Check for PlaceholderAPI dependency
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 
+            // Register PlaceholderAPI hook
             new PlaceholderHook(this).register();
 
-            // Register commands
-            registerCommands();
+            // Initialize the module manager
+            this.moduleManager = new ModuleManager(this);
+
+            // Register all plugin modules
+            this.moduleManager.registerModule(new CommandModule(this));
+
+            // Load and enable all registered modules
+            this.moduleManager.loadModules();
 
             // Register events
             registerEvents();
@@ -71,14 +79,15 @@ public class ExamplePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        // Unload and disable all modules safely to prevent memory leaks
+        if (this.moduleManager != null) {
+            this.moduleManager.unloadModules();
+        }
+
         SendUtils.log("<prefix> <red>was successfully disabled!</red>");
 
-        // Plugin shutdown logic
+        // Unregister the plugin API
         ExamplePluginAPI.unregister();
-    }
-
-    public void registerCommands() {
-        Objects.requireNonNull(this.getCommand("exampleplugin")).setExecutor(new MainCommand(this));
     }
 
     private void addListener(Listener listener) {
