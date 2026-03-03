@@ -25,13 +25,12 @@ package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
-import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
 import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
+import dev.nukecraft5419.exampleplugin.modules.listeners.ListenerModule;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ExamplePlugin extends JavaPlugin {
@@ -57,15 +56,13 @@ public class ExamplePlugin extends JavaPlugin {
 
             // Initialize the module manager
             this.moduleManager = new ModuleManager(this);
+            this.moduleManager.registerModule(new ListenerModule(this));
 
             // Register all plugin modules
             this.moduleManager.registerModule(new CommandModule(this));
 
             // Load and enable all registered modules
             this.moduleManager.loadModules();
-
-            // Register events
-            registerEvents();
 
             SendUtils.log("<prefix> <green>successfully enabled!</green>");
 
@@ -88,13 +85,5 @@ public class ExamplePlugin extends JavaPlugin {
 
         // Unregister the plugin API
         ExamplePluginAPI.unregister();
-    }
-
-    private void addListener(Listener listener) {
-        this.getServer().getPluginManager().registerEvents(listener, this);
-    }
-
-    public void registerEvents() {
-        this.addListener(new PlayerJoinListener(this));
     }
 }
