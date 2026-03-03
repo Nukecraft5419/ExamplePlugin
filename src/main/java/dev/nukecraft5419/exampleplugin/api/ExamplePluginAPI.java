@@ -27,8 +27,6 @@ import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +41,6 @@ public class ExamplePluginAPI {
     private final ExamplePlugin plugin;
     private static ExamplePluginAPI instance;
     private final MainConfigManager mainConfigManager;
-    private static final Server server = Bukkit.getServer();
     private BukkitAudiences adventure;
 
     /**
@@ -134,16 +131,6 @@ public class ExamplePluginAPI {
      */
     public static String getServerApiVersion(){
         return getInstance().plugin.getDescription().getAPIVersion();
-    }
-
-    /**
-     * Gets the server's console command sender.
-     *
-     * @return The {@link ConsoleCommandSender} instance.
-     */
-    @NotNull
-    public static ConsoleCommandSender getServer() {
-        return server.getConsoleSender();
     }
 
     /**
