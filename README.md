@@ -18,12 +18,12 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [x] **Optimization**: Lean and minimal code (~17 KB).
 - [x] **bStats**: Integration for monitoring anonymous statistics.
 - [x] **ShadowJar Build Centralization**: Centralize the build process using ShadowJar.
+- [x] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
+- [x] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
+- [x] **Legacy & PAPI Bridge**: Seamless integration of classic '&' color codes, Hex/RGB, and PlaceholderAPI directly into the MiniMessage parser without breaking gradients.
 
 ### In Progress / To Do
 - [ ] **TabCompleter**: Implementation for a better UX in commands.
-- [ ] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
-- [ ] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
-- [ ] **Legacy & PAPI Bridge**: Seamless integration of classic '&' color codes, Hex/RGB, and PlaceholderAPI directly into the MiniMessage parser without breaking gradients.
 - [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
 
 ## 💡 Technical Notes
