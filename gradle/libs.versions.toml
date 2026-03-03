@@ -4,6 +4,7 @@ metadata.format.version = "1.1"
 
 # Platforms
 spigot = "1.20.4-R0.1-SNAPSHOT"
+adventureBukkit = "4.4.1"
 miniMessage = "4.26.1"
 placeholderApi = "2.12.2"
 bStats  = "3.2.1"
@@ -15,6 +16,7 @@ runPaper = "3.0.2"
 [libraries]
 
 spigot = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
+adventureBukkit = { group = "net.kyori", name = "adventure-platform-bukkit", version.ref = "adventureBukkit" }
 miniMessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "miniMessage" }
 placeholderApi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderApi" }
 bStats = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bStats" }

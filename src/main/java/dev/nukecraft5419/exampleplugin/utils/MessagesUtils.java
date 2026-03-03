@@ -25,83 +25,147 @@ package dev.nukecraft5419.exampleplugin.utils;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
-import dev.nukecraft5419.exampleplugin.hooks.PlaceholderManager;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Utility class for handling chat messages, color formatting, and placeholders.
+ * Utility class for handling chat messages, formatting, and placeholders.
+ * Powered by Adventure API and MiniMessage for modern, component-based text.
  */
 public class MessagesUtils {
 
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[a-zA-Z0-9_]+%");
+    // Thread-safe MiniMessage instance
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
     /**
-     * Translates placeholders and color codes in a message.
+     * Formats a raw string into an Adventure Component.
+     * Dynamically translates classic %placeholder% syntax into MiniMessage <papi:placeholder> tags
+     * to preserve RGB gradients and modern formatting while fully supporting PlaceholderAPI.
      *
-     * @param player  The player for context-based placeholders (like %ep_name%), can be null.
-     * @param message The raw message string from the configuration.
-     * @return The formatted string with colors and replaced placeholders.
+     * @param sender  The CommandSender context (used for player-specific placeholders).
+     * @param message The raw string containing MiniMessage tags and PAPI placeholders.
+     * @return The formatted Adventure Component.
      */
-    public static String getColorMessage(Player player, String message) {
-        if (message == null || message.isEmpty()) return "";
+    public static Component format(CommandSender sender, String message) {
+        if (message == null || message.isEmpty()) return Component.empty();
 
-        message = PlaceholderAPI.setPlaceholders(player, message);
+        Player player = (sender instanceof Player p) ? p : null;
 
-        Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
-        StringBuilder builder = new StringBuilder();
-
-        while (matcher.find()) {
-            String placeholder = matcher.group();
-            String replacement = getReplacement(player, placeholder);
-            matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
+        // STEP 1: Auto-translate legacy PAPI syntax
+        // Converts %server_tps% into <papi:server_tps> so users don't have to change their habits.
+        if (player != null && message.contains("%")) {
+            message = message.replaceAll("%([^%]+)%", "<papi:$1>");
         }
-        matcher.appendTail(builder);
 
-        return ChatColor.translateAlternateColorCodes('&', builder.toString());
+        message = convertLegacyToMiniMessage(message);
+
+        // STEP 2: Build Tag Resolvers
+        // Combine our internal custom tags (<prefix>) with the PAPI dynamic resolver.
+        TagResolver internalTags = buildInternalResolvers(player);
+        TagResolver papiResolver = (player != null) ? createPapiResolver(player) : TagResolver.empty();
+
+        // STEP 3: Deserialize the message
+        // MiniMessage processes standard tags, our internal tags, and dynamically fetches PAPI values
+        // safely injecting them as components without breaking RGB gradients in the surrounding text.
+        return MINI_MESSAGE.deserialize(message, TagResolver.resolver(internalTags, papiResolver));
     }
 
     /**
-     * Core logic for internal placeholder replacement.
-     *
-     * @param player      The player context.
-     * @param placeholder The placeholder found (e.g., %prefix%).
-     * @return The replacement string or the placeholder itself if not found.
+     * Official PlaceholderAPI TagResolver (Credit to Adventure Wiki / mbaxter).
+     * This safely converts PAPI's legacy color returns into modern Components
+     * without destroying RGB gradients in the rest of the message.
+     * @param player The player context for PlaceholderAPI.
+     * @return A TagResolver capable of parsing <papi:...> tags.
      */
-    private static String getReplacement(Player player, String placeholder) {
+    private static @NotNull TagResolver createPapiResolver(final @NotNull Player player) {
+        return TagResolver.resolver("papi", (argumentQueue, context) -> {
+            // Get the string placeholder that they want to use (e.g., "server_tps").
+            final String papiPlaceholder = argumentQueue.popOr("papi tag requires an argument").value();
+
+            // Call PAPI by re-adding the % % symbols we removed earlier.
+            final String parsedPlaceholder = PlaceholderAPI.setPlaceholders(player, '%' + papiPlaceholder + '%');
+
+            // Convert the result (which might contain legacy § codes) into a Component.
+            final Component componentPlaceholder = LegacyComponentSerializer.legacySection().deserialize(parsedPlaceholder);
+
+            // Insert the Component directly into the MiniMessage tree.
+            return Tag.selfClosingInserting(componentPlaceholder);
+        });
+    }
+
+    /**
+     * Constructs the custom TagResolvers for the plugin's internal placeholders.
+     * Uses MiniMessage syntax (e.g., <prefix>, <author> instead of %prefix%).
+     *
+     * @param player The player context (can be null if sender is Console).
+     * @return A TagResolver containing all registered custom tags.
+     */
+    private static TagResolver buildInternalResolvers(Player player) {
         MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
-        // Handle your internal placeholders first
-        switch (placeholder.toLowerCase()) {
-            case "%prefix%":
-                return config.getPluginPrefix();
+        TagResolver.Builder builder = TagResolver.builder()
+            // Placeholder.parsed(): Allows the replacement string to contain its own MiniMessage tags
+            // (e.g., if prefix in config is "<gray>[<gold>Plugin</gold>]</gray>")
+            .resolver(Placeholder.parsed("prefix", config.getPluginPrefix()))
 
-            case "%author%":
-                return ExamplePluginAPI.getAuthorPlugin();
+            // Placeholder.unparsed(): Injects raw text securely. MiniMessage will NOT parse tags inside these strings.
+            // Prevents visual exploits if a player name or version string contains malicious formatting tags.
+            .resolver(Placeholder.unparsed("author", ExamplePluginAPI.getAuthorPlugin()))
+            .resolver(Placeholder.unparsed("server_version", ExamplePluginAPI.getServerVersion()))
+            .resolver(Placeholder.unparsed("server_api_version", ExamplePluginAPI.getServerApiVersion()));
 
-            case "%server_version%":
-                return ExamplePluginAPI.getServerVersion();
-
-            case "%server_api_version%":
-                return ExamplePluginAPI.getServerApiVersion();
+        // Add player-specific internal tags if a player context exists
+        if (player != null) {
+            builder.resolver(Placeholder.unparsed("player_name", player.getName()));
         }
 
-        // For any other placeholder, try to use the central PlaceholderManager
-        // We strip the '%' (e.g., %ep_version% -> version)
-        if (placeholder.length() > 2) {
-            String identifier = placeholder.substring(1, placeholder.length() - 1);
-            String value = PlaceholderManager.get(player, identifier);
+        return builder.build();
+    }
 
-            if (value != null) {
-                return value;
-            }
-        }
+    /**
+     * Translates legacy color codes (e.g., &6, &l, &#FF0000) into MiniMessage tags.
+     * This allows users to keep using their muscle memory for older color formatting
+     * while still enjoying the power of the MiniMessage parser.
+     *
+     * @param message The raw string with legacy codes.
+     * @return The string with MiniMessage tags injected.
+     */
+    private static String convertLegacyToMiniMessage(String message) {
+        if (!message.contains("&")) return message;
 
-        // If no match is found, return the original placeholder string
-        return placeholder;
+        // Convert Hex colors: &#FF0000 -> <#FF0000>
+        message = message.replaceAll("&#([a-fA-F0-9]{6})", "<#$1>");
+
+        // Convert standard colors & formatting
+        return message.replace("&0", "<black>")
+            .replace("&1", "<dark_blue>")
+            .replace("&2", "<dark_green>")
+            .replace("&3", "<dark_aqua>")
+            .replace("&4", "<dark_red>")
+            .replace("&5", "<dark_purple>")
+            .replace("&6", "<gold>")
+            .replace("&7", "<gray>")
+            .replace("&8", "<dark_gray>")
+            .replace("&9", "<blue>")
+            .replace("&a", "<green>")
+            .replace("&b", "<aqua>")
+            .replace("&c", "<red>")
+            .replace("&d", "<light_purple>")
+            .replace("&e", "<yellow>")
+            .replace("&f", "<white>")
+            .replace("&l", "<bold>")
+            .replace("&m", "<strikethrough>")
+            .replace("&n", "<underlined>")
+            .replace("&o", "<italic>")
+            .replace("&k", "<obfuscated>")
+            .replace("&r", "<reset>");
     }
 }

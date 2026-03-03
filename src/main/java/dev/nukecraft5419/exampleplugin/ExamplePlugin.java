@@ -59,10 +59,11 @@ public class ExamplePlugin extends JavaPlugin {
             // Register events
             registerEvents();
 
-            SendUtils.log("%prefix% &asuccessfully enabled!");
+            SendUtils.log("<prefix> <green>successfully enabled!</green>");
 
         } else {
-            SendUtils.log("&cCould not find PlaceholderAPI! This plugin is required.");
+            this.getLogger().severe("Could not find PlaceholderAPI! This plugin is required.");
+            this.getLogger().severe("Disabling ExamplePlugin...");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
@@ -70,7 +71,7 @@ public class ExamplePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        SendUtils.log("%prefix% &cwas successfully disabled!");
+        SendUtils.log("<prefix> <red>was successfully disabled!</red>");
 
         // Plugin shutdown logic
         ExamplePluginAPI.unregister();

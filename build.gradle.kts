@@ -22,6 +22,7 @@ repositories {
 dependencies {
     compileOnly(libs.spigot) // Spigot API
     compileOnly(libs.placeholderApi) // Placeholder API
+    implementation(libs.adventureBukkit) // Adventure Platform Bukkit
     implementation(libs.miniMessage) // MiniMessage API
     implementation(libs.bStats) // bStats API
 }
@@ -46,17 +47,19 @@ tasks.jar {
 }
 
 tasks.shadowJar {
-  configurations = project.configurations.runtimeClasspath.map { setOf(it) }
+  // Instructs ShadowJar to bundle all dependencies marked as "implementation"
+  // (like bStats and Kyori Adventure/MiniMessage) into our final plugin JAR.
+  configurations = listOf(project.configurations.runtimeClasspath.get())
+
+  // Removes the default "-all" suffix from the generated JAR file name,
+  // keeping the output name clean (e.g., ExamplePlugin-1.0.0.jar).
   archiveClassifier.set("")
 
-  dependencies {
-    // Only merge bStats into the final jar, no other dependencies
-    exclude { it.moduleGroup != "org.bstats" }
-  }
-
-  // Relocate bStats into the plugin's package to avoid conflicts with other
-  // plugins using bStats
+  // Relocation: Moves external libraries into our plugin's internal package structure.
+  // This is CRITICAL to prevent ClassNotFoundException or NoSuchMethodError conflicts
+  // if another plugin on the same server is using a different version of bStats or Kyori.
   relocate("org.bstats", "${project.group}.libs.bStats")
+  relocate("net.kyori", "${project.group}.libs.adventureBukkit")
 }
 
 tasks.build {

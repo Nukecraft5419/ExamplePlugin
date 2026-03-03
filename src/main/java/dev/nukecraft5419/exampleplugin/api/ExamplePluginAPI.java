@@ -25,6 +25,7 @@ package dev.nukecraft5419.exampleplugin.api;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
@@ -43,6 +44,7 @@ public class ExamplePluginAPI {
     private static ExamplePluginAPI instance;
     private final MainConfigManager mainConfigManager;
     private static final Server server = Bukkit.getServer();
+    private BukkitAudiences adventure;
 
     /**
      * Internal constructor to initialize the API instance.
@@ -53,6 +55,7 @@ public class ExamplePluginAPI {
     protected ExamplePluginAPI(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
         this.mainConfigManager = new MainConfigManager(plugin);
+        this.adventure = BukkitAudiences.create(plugin);
     }
 
     /**
@@ -87,6 +90,12 @@ public class ExamplePluginAPI {
      */
     @ApiStatus.Internal
     public static void unregister() {
+        if (instance != null) {
+            if (instance.adventure != null) {
+                instance.adventure.close();
+                instance.adventure = null;
+            }
+        }
         instance = null;
     }
 
@@ -145,6 +154,19 @@ public class ExamplePluginAPI {
     @NotNull
     public static String getServerVersion() {
         return Bukkit.getBukkitVersion();
+    }
+
+    /**
+     * Provides access to the Adventure BukkitAudiences instance.
+     *
+     * @return The {@link BukkitAudiences} instance.
+     */
+    @NotNull
+    public static BukkitAudiences getAdventure() {
+        if (getInstance().adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return getInstance().adventure;
     }
 
     /**

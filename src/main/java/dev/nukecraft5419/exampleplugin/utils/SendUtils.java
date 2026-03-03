@@ -23,38 +23,41 @@
  */
 package dev.nukecraft5419.exampleplugin.utils;
 
+import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
 /**
  * Utility class for delivering formatted messages to players and console.
+ * Utilizes Adventure's BukkitAudiences to safely send modern Components on Spigot servers.
  */
 public class SendUtils {
 
     /**
-     * Sends a single formatted message to a CommandSender.
+     * Formats and sends a single MiniMessage string to a CommandSender.
      *
      * @param sender  The recipient (Player or Console).
-     * @param message The raw string from config.
+     * @param message The raw string containing MiniMessage tags (and optionally PAPI placeholders).
      */
     public static void sendMessage(CommandSender sender, String message) {
         if (sender == null || message == null || message.isEmpty()) return;
 
-        // Extract player context if available for placeholder resolution
-        Player player = (sender instanceof Player p) ? p : null;
+        // 1. Convert the raw string into an Adventure Component using our format engine
+        Component component = MessagesUtils.format(sender, message);
 
-        // Format using the existing internal engine and deliver
-        sender.sendMessage(MessagesUtils.getColorMessage(player, message));
+        // 2. Deliver the Component using the Adventure Platform bridge.
+        // This is necessary because native Spigot CommandSenders do not support Component objects directly.
+        ExamplePluginAPI.getAdventure().sender(sender).sendMessage(component);
     }
 
     /**
-     * Sends a list of formatted messages to a CommandSender.
+     * Formats and sends a list of MiniMessage strings to a CommandSender.
      *
      * @param sender   The recipient (Player or Console).
-     * @param messages The list of strings from config.
+     * @param messages The list of raw strings to send.
      */
     public static void sendMessages(CommandSender sender, List<String> messages) {
         if (sender == null || messages == null || messages.isEmpty()) return;
@@ -65,9 +68,10 @@ public class SendUtils {
     }
 
     /**
-     * Shorthand to send a message to the console.
+     * Shorthand to send a formatted message directly to the server console.
+     * Useful for startup, shutdown, or debugging logs.
      *
-     * @param message The message to log.
+     * @param message The message to log (supports custom tags like <prefix> and colors like <green>).
      */
     public static void log(String message) {
         sendMessage(Bukkit.getConsoleSender(), message);

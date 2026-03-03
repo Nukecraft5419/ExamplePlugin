@@ -2,77 +2,82 @@
 #║ ● ExamplePlugin ● ║
 #╚═══════════════════╝
 
-# Minecraft Legacy Colour Codes
-
-# Color Code
-# &0 Changes text to Black
-# &1 Changes text to Dark Blue
-# &2 Changes text to Dark Green
-# &3 Changes text to Dark Aqua
-# &4 Changes text to Dark Red
-# &5 Changes text to Dark Purple
-# &6 Changes text to Gold
-# &7 Changes text to Gray
-# &8 Changes text to Dark Gray
-# &9 Changes text to Blue
-# &a Changes text to Green
-# &b Changes text to Aqua
-# &c Changes text to Red
-# &d Changes text to Light Purple
-# &e Changes text to Yellow
-# &f Changes text to White
-
-# Format Code
-# &k Change Text to Obfuscated
-# &l Change Text to Bold
-# &m Change Text to Strikethrough
-# &n Change Text to Underline
-# &o Change Text to Italic
-# &r Change Text to Reset to the default
-
-# Variables that can be used
-# %prefix% - The prefix of the plugin
-# %author% - The author of the plugin
-# %ep_version% - The version of the plugin
-# %ep_name% - The display name of the player
-# %server_version% - The version of the server
-# %server_api_version% - The version of the api of the server
+# ----------------------------------------------------
+# Modern Adventure MiniMessage Format
+# ----------------------------------------------------
+# We use MiniMessage as our primary engine.
+# This allows for RGB colors, gradients, click events, and safer parsing.
+#
+# ✨ LEGACY SUPPORT (THE BRIDGE):
+# Don't worry! You can still use classic '&' color codes (e.g., &6, &l)
+# and Hex codes (e.g., &#FF0000). Our engine automatically converts
+# them into modern MiniMessage tags without breaking gradients.
+#
+# ⚠️ IMPORTANT RULE (XML-Style Syntax):
+# When you use MiniMessage tags (like <red>), it is best practice
+# to close them (</red>) so they don't bleed into the rest of the text.
+# Example: "<gray>This is gray, </gray><green>this is green!</green>"
+#
+# 🛠️ USEFUL TOOLS & LINKS:
+# - MiniMessage Web Editor (Test your messages live!):
+#   https://webui.advntr.dev/
+# - PlaceholderAPI Official Placeholder List:
+#   https://wiki.placeholderapi.com/users/placeholder-list/minecraft/
+#
+# Standard Colors:
+# <black>, <dark_blue>, <dark_green>, <dark_aqua>, <dark_red>, <dark_purple>,
+# <gold>, <gray>, <dark_gray>, <blue>, <green>, <aqua>, <red>, <light_purple>,
+# <yellow>, <white>
+#
+# Formatting:
+# <obfuscated>, <bold>, <strikethrough>, <underlined>, <italic>, <reset>
+#
+# Custom Plugin Tags (Internal):
+# <prefix>             - The prefix of the plugin
+# <author>             - The author of the plugin
+# <server_version>     - The version of the server
+# <server_api_version> - The API version of the server
+#
+# External Placeholders (PlaceholderAPI):
+# %ep_version%         - The version of the plugin (via PAPI)
+# %ep_name%            - The display name of the player (via PAPI)
+# ----------------------------------------------------
 
 #╔════════════════════╗
 #║ ● Plugin Message ● ║
 #╚════════════════════╝
 plugin:
-    prefix: "&6&lExamplePlugin &8»"
-    hello: "&aHello &e%ep_name%!"
-    author: "%prefix% &7The author of the plugin is: &e%author%"
-    version: "%prefix% &7The version of the plugin is the: &ev%ep_version%"
-    reload: "%prefix% &7The plugin has been reloaded!"
-    help:
-        - "&8&m-------&r&8[&6&lExamplePlugin&8]&m-------"
-        - "&7- &c/exampleplugin help &7- &eShow help"
-        - "&7- &c/exampleplugin hello &7- &eShow hello"
-        - "&7- &c/exampleplugin get &7- &eShow <author/version>"
-        - "&7- &c/exampleplugin reload &7- &eReload plugin"
-        - "&8&m-----------------------------------------"
+  prefix: "<gold><b>ExamplePlugin</b></gold> <dark_gray>»</dark_gray>"
+  hello: "<green>Hello <yellow>%ep_name%</yellow>!</green>"
+  author: "<prefix> <gray>The author of the plugin is:</gray> <yellow><author></yellow>"
+  version: "<prefix> <gray>The version of the plugin is the:</gray> <yellow>v%ep_version%</yellow>"
+  reload: "<prefix> <green>The plugin has been reloaded!</green>"
+  help:
+    - "<dark_gray><strikethrough>-------------</strikethrough> [<gold><b>ExamplePlugin</b></gold>] <strikethrough>-------------</strikethrough></dark_gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin help><hover:show_text:'Click to suggest command'>/exampleplugin help</hover></click></red> - <yellow>Show help</yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin hello><hover:show_text:'Click to suggest command'>/exampleplugin hello</hover></click></red> - <yellow>Show hello</yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin get><hover:show_text:'Click to suggest command'>/exampleplugin get</hover></click></red> - <yellow>Show <author|version></yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin reload><hover:show_text:'Click to suggest command'>/exampleplugin reload</hover></click></red> - <yellow>Reload plugin</yellow></gray>"
+    - "<dark_gray><strikethrough>------------------------------------------</strikethrough></dark_gray>"
 
 #╔════════════════════╗
 #║ ● Errors Message ● ║
 #╚════════════════════╝
 errors:
-    console: "%prefix% &8&l(&4&l!&8&l)&r &cThis command cannot be executed from the console!"
-    no-permission: "%prefix% &8&l(&4&l!&8&l)&r &cYou don't have permission to execute this command!"
-    no-args-get: "%prefix% &8&l(&4&l!&8&l)&r &eUnknown args! &7Please use the command &c/exampleplugin <author/version>"
+  console: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <red>This command cannot be executed from the console!</red>"
+  no-permission: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <red>You don't have permission to execute this command!</red>"
+  no-args-get: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <yellow>Unknown args!</yellow> <gray>Please use the command</gray> <red>/exampleplugin <author|version></red>"
 
 #╔══════════════════╗
 #║ ● Join Message ● ║
 #╚══════════════════╝
 join:
-    enabled: true
-    message: "&aHello &e%ep_name% &athis is example message join"
+  enabled: true
+  message: "<green>Hello <yellow>%ep_name%</yellow> this is example message join</green>"
 
 #╔═════════════════════════╗
 #║ ● Server Info Message ● ║
 #╚═════════════════════════╝
 server-info:
-    enabled: true
-    message: "%prefix% &7Version server: &e%server_version% &7version plugin: &e%ep_version% &7version api plugin: &e%server_api_version%"
+  enabled: true
+  message: "<prefix> <gray>Version server: <yellow><server_version></yellow> version plugin: <yellow>%ep_version%</yellow> version api plugin: <yellow><server_api_version></yellow></gray>"
