@@ -23,6 +23,7 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [ ] **TabCompleter**: Implementation for a better UX in commands.
 - [ ] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
 - [ ] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
+- [ ] **Legacy & PAPI Bridge**: Seamless integration of classic '&' color codes, Hex/RGB, and PlaceholderAPI directly into the MiniMessage parser without breaking gradients.
 - [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
 
 ## 💡 Technical Notes
