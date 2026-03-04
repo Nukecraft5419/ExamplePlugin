@@ -65,8 +65,7 @@ public class MainConfigManager {
     public MainConfigManager(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
 
-        configFile = new CustomConfig("config.yml", null, plugin);
-        configFile.registerConfig();
+        configFile = new CustomConfig(plugin, "config.yml");
         loadConfig();
     }
 

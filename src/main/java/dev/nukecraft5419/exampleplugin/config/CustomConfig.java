@@ -24,88 +24,127 @@
 package dev.nukecraft5419.exampleplugin.config;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
-import org.bukkit.configuration.InvalidConfigurationException;
+import dev.nukecraft5419.exampleplugin.utils.ConfigUpdaterUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
+/**
+ * Modern wrapper for Bukkit's YamlConfiguration.
+ * Fully supports UTF-8, sub-folders, and automatic default loading from the JAR.
+ */
 public class CustomConfig {
 
     private final ExamplePlugin plugin;
-    private final String fileName;
-    private FileConfiguration fileConfiguration = null;
-    private File file = null;
-    private final String folderName;
+    private final String resourcePath;
+    private final File file;
+    private FileConfiguration config;
 
-    public CustomConfig(@NotNull String fileName, String folderName, @NotNull ExamplePlugin plugin){
-        this.fileName = fileName;
-        this.folderName = folderName;
+    /**
+     * Creates or loads a custom YAML configuration file in the main plugin folder.
+     *
+     * @param plugin   The main plugin instance.
+     * @param fileName The name of the file (e.g., "config.yml").
+     */
+    public CustomConfig(@NotNull ExamplePlugin plugin, @NotNull String fileName) {
+        this(plugin, fileName, null);
+    }
+
+    /**
+     * Creates or loads a custom YAML configuration file in a specific subfolder.
+     *
+     * @param plugin   The main plugin instance.
+     * @param fileName The name of the file (e.g., "spawn.yml" or just "spawn").
+     * @param folder   The subfolder (e.g., "locales"). Use null for the main folder.
+     */
+    public CustomConfig(@NotNull ExamplePlugin plugin, @NotNull String fileName, @Nullable String folder) {
         this.plugin = plugin;
-    }
+        String actualFileName = fileName.endsWith(".yml") ? fileName : fileName + ".yml";
 
-    public String getPath(){
-        return this.fileName;
-    }
-
-    public void registerConfig(){
-        if (folderName != null){
-            file = new File(plugin.getDataFolder() +File.separator + folderName,fileName);
+        if (folder != null && !folder.isEmpty()) {
+            this.file = new File(plugin.getDataFolder() + File.separator + folder, actualFileName);
+            this.resourcePath = folder + "/" + actualFileName;
         } else {
-            file = new File(plugin.getDataFolder(), fileName);
+            this.file = new File(plugin.getDataFolder(), actualFileName);
+            this.resourcePath = actualFileName;
         }
 
-        if (!file.exists()) {
-            if (folderName != null){
-                plugin.saveResource(folderName+File.separator+fileName, false);
-            } else {
-                plugin.saveResource(fileName, false);
-            }
-        }
+        saveDefaultConfig();
+        reloadConfig();
+    }
 
-        fileConfiguration = new YamlConfiguration();
-        try {
-            fileConfiguration.load(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
+    /**
+     * Reloads the configuration from the disk.
+     * If a default file exists inside the JAR, it will act as a fallback for missing keys.
+     * It also automatically updates the file on disk without losing comments.
+     */
+    public void reloadConfig() {
+        // Automatically update the config with new keys before loading it into memory
+        ConfigUpdaterUtils.update(plugin, this.resourcePath, this.file);
+
+        this.config = YamlConfiguration.loadConfiguration(this.file);
+
+        // Look for default configs inside the JAR and load them using UTF-8
+        InputStream defaultStream = plugin.getResource(this.resourcePath);
+        if (defaultStream != null) {
+            YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultStream, StandardCharsets.UTF_8));
+            this.config.setDefaults(defaultConfig);
         }
     }
+
+    /**
+     * Gets the loaded configuration instance.
+     *
+     * @return The FileConfiguration to read/write data.
+     */
+    @NotNull
+    public FileConfiguration getConfig() {
+        if (this.config == null) reloadConfig();
+        return this.config;
+    }
+
+    /**
+     * Saves the current memory configuration to the disk.
+     */
+    @SuppressWarnings("unused")
     public void saveConfig() {
         try {
-            fileConfiguration.save(file);
+            getConfig().save(this.file);
         } catch (IOException e) {
-            e.printStackTrace();
+            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + this.file.getName(), e);
         }
     }
 
-    public FileConfiguration getConfig() {
-        if (fileConfiguration == null) {
-            reloadConfig();
-        }
+    /**
+     * Creates the file and directories if they don't exist.
+     * It will copy the default file from the JAR if available.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void saveDefaultConfig() {
+        if (!this.file.exists()) {
+            File parent = this.file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs(); // Intentionally ignoring the boolean result
+            }
 
-        return fileConfiguration;
-    }
-
-    public boolean reloadConfig() {
-        if (fileConfiguration == null) {
-            if (folderName != null) {
-                file = new File(plugin.getDataFolder() +File.separator + folderName, fileName);
+            if (plugin.getResource(this.resourcePath) != null) {
+                plugin.saveResource(this.resourcePath, false);
             } else {
-                file = new File(plugin.getDataFolder(), fileName);
+                // Otherwise, create a completely empty file
+                try {
+                    this.file.createNewFile(); // Intentionally ignoring the boolean result
+                } catch (IOException e) {
+                    plugin.getLogger().log(Level.SEVERE, "Could not create empty file " + this.file.getName(), e);
+                }
             }
         }
-
-        fileConfiguration = YamlConfiguration.loadConfiguration(file);
-
-        if (file != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(file);
-            fileConfiguration.setDefaults(defConfig);
-        }
-
-        return true;
     }
 }
