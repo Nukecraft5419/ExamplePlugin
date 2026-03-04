@@ -21,13 +21,13 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [x] **MiniMessage Global System**: Standardization of the color system throughout the plugin.
 - [x] **Dynamic Configurations**: Native MiniMessage support for messages loaded from files.
 - [x] **Legacy & PAPI Bridge**: Seamless integration of classic '&' color codes, Hex/RGB, and PlaceholderAPI directly into the MiniMessage parser without breaking gradients.
+- [x] **Modular Architecture (Core)**: Implementation of the `PluginModule` interface and a central module management system to decouple logic.
+- [x] **Command & Listener Decoupling**: Migration of command registration and event listeners into independent, self-contained modules.
+- [x] **PlaceholderAPI Soft-Dependency**: Refactoring the PAPI bridge to be a dynamic module, allowing the plugin to run without PAPI while providing internal fallbacks.
+- [x] **Advanced Module Lifecycle**: Implementation of `onEnable` and `onDisable` logic for each module to prevent memory leaks and ensure clean reloads.
 
 ### In Progress / To Do
-- [ ] **Modular Architecture (Core)**: Implementation of the `PluginModule` interface and a central module management system to decouple logic.
-- [ ] **Command & Listener Decoupling**: Migration of command registration and event listeners into independent, self-contained modules.
-- [ ] **PlaceholderAPI Soft-Dependency**: Refactoring the PAPI bridge to be a dynamic module, allowing the plugin to run without PAPI while providing internal fallbacks.
-- [ ] **Advanced Module Lifecycle**: Implementation of `onEnable` and `onDisable` logic for each module to prevent memory leaks and ensure clean reloads.
-- [ ] **TabCompleter**: Implementation for a better UX in commands.
+- [ ] **SubCommand Router & TabCompleter**: Implementation of a dynamic command router for a better UX and scalable command structure.
 - [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
 
 ## 💡 Technical Notes
