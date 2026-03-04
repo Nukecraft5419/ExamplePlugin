@@ -25,10 +25,15 @@ A modern and ultra-lightweight architectural template for Spigot plugins, design
 - [x] **Command & Listener Decoupling**: Migration of command registration and event listeners into independent, self-contained modules.
 - [x] **PlaceholderAPI Soft-Dependency**: Refactoring the PAPI bridge to be a dynamic module, allowing the plugin to run without PAPI while providing internal fallbacks.
 - [x] **Advanced Module Lifecycle**: Implementation of `onEnable` and `onDisable` logic for each module to prevent memory leaks and ensure clean reloads.
+- [x] **SubCommand Router & TabCompleter**: Implementation of a dynamic command router for a better UX and scalable command structure.
+- [x] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
 
 ### In Progress / To Do
-- [ ] **SubCommand Router & TabCompleter**: Implementation of a dynamic command router for a better UX and scalable command structure.
-- [ ] **Guard Clauses**: Code refactoring to eliminate excessive indentation.
+- [ ] **Modern CustomConfig**: Scalable wrapper with UTF-8 support and sub-folder generation.
+- [ ] **i18n (Internationalization) Support**: Multi-language system with locales folder.
+- [ ] **Dynamic Module Toggling**: Control system via `modules.yml` to enable/disable plugin features.
+- [ ] **Standardized Data Persistence**: Lightweight SQL module (SQLite/MySQL) using a clean abstraction layer.
+- [ ] **Advanced Library Loader**: Runtime dependency downloader (LuckPerms style) to ensure version compatibility and minimal JAR size.
 
 ## 💡 Technical Notes
 
