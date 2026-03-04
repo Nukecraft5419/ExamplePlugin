@@ -25,104 +25,109 @@ package dev.nukecraft5419.exampleplugin.commands;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.commands.subcommands.GetCommand;
+import dev.nukecraft5419.exampleplugin.commands.subcommands.HelloCommand;
+import dev.nukecraft5419.exampleplugin.commands.subcommands.HelpCommand;
+import dev.nukecraft5419.exampleplugin.commands.subcommands.ReloadCommand;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
-import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MainCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Main command router for ExamplePlugin.
+ * Delegates execution and tab completion to isolated SubCommand classes.
+ */
+public class MainCommand implements CommandExecutor, TabCompleter {
 
     private final ExamplePlugin plugin;
-    MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
+    private final MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
+    private final List<SubCommand> subCommands = new ArrayList<>();
 
     public MainCommand(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
+
+        subCommands.add(new HelpCommand());
+        subCommands.add(new HelloCommand());
+        subCommands.add(new GetCommand());
+        subCommands.add(new ReloadCommand());
     }
 
+    /**
+     * Executes the main command logic.
+     * Acts as a router: finds the matching SubCommand and delegates execution.
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            // Console
             SendUtils.sendMessage(sender, config.getErrorsConsole());
             return true;
         }
 
-        // ExamplePlugin args[0] args[1] args[2]
-        if (args.length >= 1) {
-            if (args[0].equalsIgnoreCase("hello")) {
-                // ExamplePlugin hello
-                subcommandHello(sender);
-            } else if (args[0].equalsIgnoreCase("get")) {
-                // ExamplePlugin <author/version>
-                subcommandGet(sender, args);
-            } else if (args[0].equalsIgnoreCase("reload")) {
-                // ExamplePlugin reload
-                subcommandReload(sender);
-            } else {
-                // ExamplePlugin help
-                subcommandHelp(sender);
-            }
-        } else {
-            // ExamplePlugin help
-            subcommandHelp(sender);
+        if (args.length == 0) {
+            executeSubCommand(sender, "help", args);
+            return true;
         }
 
+        executeSubCommand(sender, args[0], args);
         return true;
     }
 
-    // ExamplePlugin reload
-    public void subcommandHello(CommandSender sender) {
-        if (!sender.hasPermission(PermissionsUtils.COMMAND_HELLO)) {
-            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
-            return;
+    /**
+     * Helper method to find and execute a specific subcommand.
+     * Also handles permission checks before execution.
+     *
+     * @param sender      The command sender.
+     * @param commandName The name of the subcommand to search for.
+     * @param args        The full arguments array.
+     */
+    private void executeSubCommand(CommandSender sender, String commandName, String[] args){
+        for (SubCommand subCmd : subCommands) {
+            if (subCmd.getName().equalsIgnoreCase(commandName)) {
+                if (sender.hasPermission(subCmd.getPermission())) {
+                    subCmd.execute(sender, args);
+                } else {
+                    SendUtils.sendMessage(sender, config.getErrorsNoPermission());
+                }
+                return;
+            }
         }
-        SendUtils.sendMessage(sender, config.getPluginHello());
+        executeSubCommand(sender, "help", args);
     }
 
-    public void subcommandHelp(CommandSender sender) {
-        if (!sender.hasPermission(PermissionsUtils.COMMAND_HELP)) {
-            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
-            return;
-        }
-        SendUtils.sendMessages(sender, config.getPluginHelp());
-    }
-
-    public void subcommandGet(CommandSender sender, String[] args) {
-        // ExamplePlugin get permission
-        if (!sender.hasPermission(PermissionsUtils.COMMAND_GET)) {
-            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
-            return;
-        }
+    /**
+     * Provides dynamic tab completion.
+     * Automatically queries the registered SubCommands for relevant suggestions.
+     */
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            // ExamplePlugin get
-            SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
-            return;
+            for (SubCommand subCmd : subCommands) {
+                if (sender.hasPermission(subCmd.getPermission())) {
+                    suggestions.add(subCmd.getName());
+                }
+            }
+        } else if (args.length >= 2) {
+            for (SubCommand subCmd : subCommands) {
+                if (args[0].equalsIgnoreCase(subCmd.getName()) && sender.hasPermission(subCmd.getPermission())) {
+                    suggestions = subCmd.getSubcommandArguments(sender, args);
+                    break;
+                }
+            }
         }
-
-        if (args[1].equalsIgnoreCase("author")) {
-            // ExamplePlugin get author
-            SendUtils.sendMessage(sender, config.getPluginAuthor());
-        } else if (args[1].equalsIgnoreCase("version")) {
-            // ExamplePlugin get version
-            SendUtils.sendMessage(sender, config.getPluginVersion());
-        } else {
-            // ExamplePlugin get
-            SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
-        }
-    }
-
-    // ExamplePlugin reload
-    public void subcommandReload(CommandSender sender) {
-        if (!sender.hasPermission(PermissionsUtils.COMMAND_RELOAD)) {
-            SendUtils.sendMessage(sender, config.getErrorsNoPermission());
-            return;
-        }
-        config.reloadConfig();
-        SendUtils.sendMessage(sender, config.getPluginReload());
+        return suggestions.stream()
+            .filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+            .collect(Collectors.toList());
     }
 }
