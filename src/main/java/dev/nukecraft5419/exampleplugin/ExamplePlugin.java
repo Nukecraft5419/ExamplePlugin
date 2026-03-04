@@ -24,53 +24,42 @@
 package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
-import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
 import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
+import dev.nukecraft5419.exampleplugin.modules.hooks.HookModule;
 import dev.nukecraft5419.exampleplugin.modules.listeners.ListenerModule;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ExamplePlugin extends JavaPlugin {
 
+    // You can find the plugin id of your plugins on
+    // the page https://bstats.org/what-is-my-plugin-id
     private static final int BSTATS_ID = 29819;
     private ModuleManager moduleManager;
 
     @Override
     public void onEnable() {
 
-        // You can find the plugin id of your plugins on
-        // the page https://bstats.org/what-is-my-plugin-id
+        // Initialize bStats metrics
         new Metrics(this, BSTATS_ID);
 
         // Register the plugin API
         ExamplePluginAPI.register(this);
 
-        // Check for PlaceholderAPI dependency
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        // Initialize the module manager
+        this.moduleManager = new ModuleManager(this);
 
-            // Register PlaceholderAPI hook
-            new PlaceholderHook(this).register();
+        // Register all plugin modules
+        this.moduleManager.registerModule(new HookModule(this));
+        this.moduleManager.registerModule(new CommandModule(this));
+        this.moduleManager.registerModule(new ListenerModule(this));
 
-            // Initialize the module manager
-            this.moduleManager = new ModuleManager(this);
-            this.moduleManager.registerModule(new ListenerModule(this));
+        // Load and enable all registered modules
+        this.moduleManager.loadModules();
 
-            // Register all plugin modules
-            this.moduleManager.registerModule(new CommandModule(this));
-
-            // Load and enable all registered modules
-            this.moduleManager.loadModules();
-
-            SendUtils.log("<prefix> <green>successfully enabled!</green>");
-
-        } else {
-            this.getLogger().severe("Could not find PlaceholderAPI! This plugin is required.");
-            this.getLogger().severe("Disabling ExamplePlugin...");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
+        SendUtils.log("<prefix> <green>successfully enabled!</green>");
     }
 
     @Override

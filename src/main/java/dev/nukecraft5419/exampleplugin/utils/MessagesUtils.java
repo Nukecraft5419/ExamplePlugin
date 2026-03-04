@@ -32,6 +32,7 @@ import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -59,18 +60,18 @@ public class MessagesUtils {
 
         Player player = (sender instanceof Player p) ? p : null;
 
+        message = convertLegacyToMiniMessage(message);
+
         // STEP 1: Auto-translate legacy PAPI syntax
         // Converts %server_tps% into <papi:server_tps> so users don't have to change their habits.
-        if (player != null && message.contains("%")) {
+        if (player != null && isPapiEnabled() && message.contains("%")) {
             message = message.replaceAll("%([^%]+)%", "<papi:$1>");
         }
-
-        message = convertLegacyToMiniMessage(message);
 
         // STEP 2: Build Tag Resolvers
         // Combine our internal custom tags (<prefix>) with the PAPI dynamic resolver.
         TagResolver internalTags = buildInternalResolvers(player);
-        TagResolver papiResolver = (player != null) ? createPapiResolver(player) : TagResolver.empty();
+        TagResolver papiResolver = (player != null && isPapiEnabled()) ? createSafePapiResolver(player) : TagResolver.empty();
 
         // STEP 3: Deserialize the message
         // MiniMessage processes standard tags, our internal tags, and dynamically fetches PAPI values
@@ -79,19 +80,28 @@ public class MessagesUtils {
     }
 
     /**
+     * Checks if PlaceholderAPI is currently enabled on the server.
+     */
+    private static boolean isPapiEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+    }
+
+    /**
      * Official PlaceholderAPI TagResolver (Credit to Adventure Wiki / mbaxter).
      * This safely converts PAPI's legacy color returns into modern Components
      * without destroying RGB gradients in the rest of the message.
+     * Safely constructs the PAPI TagResolver.
+     * It uses a wrapper class so the JVM doesn't crash if PAPI is missing.
      * @param player The player context for PlaceholderAPI.
      * @return A TagResolver capable of parsing <papi:...> tags.
      */
-    private static @NotNull TagResolver createPapiResolver(final @NotNull Player player) {
+    private static @NotNull TagResolver createSafePapiResolver(final @NotNull Player player) {
         return TagResolver.resolver("papi", (argumentQueue, context) -> {
             // Get the string placeholder that they want to use (e.g., "server_tps").
             final String papiPlaceholder = argumentQueue.popOr("papi tag requires an argument").value();
 
             // Call PAPI by re-adding the % % symbols we removed earlier.
-            final String parsedPlaceholder = PlaceholderAPI.setPlaceholders(player, '%' + papiPlaceholder + '%');
+            String parsedPlaceholder = PapiWrapper.set(player, "%" + papiPlaceholder + "%");
 
             // Convert the result (which might contain legacy § codes) into a Component.
             final Component componentPlaceholder = LegacyComponentSerializer.legacySection().deserialize(parsedPlaceholder);
@@ -103,7 +113,8 @@ public class MessagesUtils {
 
     /**
      * Constructs the custom TagResolvers for the plugin's internal placeholders.
-     * Uses MiniMessage syntax (e.g., <prefix>, <author> instead of %prefix%).
+     * Uses MiniMessage syntax (e.g., {@code <prefix>}, {@code <version>} instead of %prefix%).
+     * Uses safe fallbacks to prevent NullPointerExceptions if the config or API is not ready.
      *
      * @param player The player context (can be null if sender is Console).
      * @return A TagResolver containing all registered custom tags.
@@ -111,20 +122,36 @@ public class MessagesUtils {
     private static TagResolver buildInternalResolvers(Player player) {
         MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
+        // Safe fallbacks: If the config is broken or missing, these prevent MiniMessage from crashing.
+        String prefix = (config != null && config.getPluginPrefix() != null) ? config.getPluginPrefix() : "<gray>[ExamplePlugin]</gray>";
+
+        // Guaranteed to be non-null by the API annotations
+        String version = ExamplePluginAPI.getVersionPlugin();
+        String serverVersion = ExamplePluginAPI.getServerVersion();
+
+        // Defensive checks for methods that might lack strict @NotNull annotations
+        String author = ExamplePluginAPI.getAuthorPlugin() != null ? ExamplePluginAPI.getAuthorPlugin() : "Unknown";
+        String serverApiVersion = ExamplePluginAPI.getServerApiVersion() != null ? ExamplePluginAPI.getServerApiVersion() : "Unknown";
+
         TagResolver.Builder builder = TagResolver.builder()
             // Placeholder.parsed(): Allows the replacement string to contain its own MiniMessage tags
             // (e.g., if prefix in config is "<gray>[<gold>Plugin</gold>]</gray>")
-            .resolver(Placeholder.parsed("prefix", config.getPluginPrefix()))
+            .resolver(Placeholder.parsed("prefix", prefix))
 
             // Placeholder.unparsed(): Injects raw text securely. MiniMessage will NOT parse tags inside these strings.
             // Prevents visual exploits if a player name or version string contains malicious formatting tags.
-            .resolver(Placeholder.unparsed("author", ExamplePluginAPI.getAuthorPlugin()))
-            .resolver(Placeholder.unparsed("server_version", ExamplePluginAPI.getServerVersion()))
-            .resolver(Placeholder.unparsed("server_api_version", ExamplePluginAPI.getServerApiVersion()));
+            .resolver(Placeholder.unparsed("author", author))
+            .resolver(Placeholder.unparsed("version", version))
+            .resolver(Placeholder.unparsed("server_version", serverVersion))
+            .resolver(Placeholder.unparsed("server_api_version", serverApiVersion));
 
         // Add player-specific internal tags if a player context exists
         if (player != null) {
             builder.resolver(Placeholder.unparsed("player_name", player.getName()));
+            builder.resolver(Placeholder.unparsed("name", player.getDisplayName()));
+        } else {
+            builder.resolver(Placeholder.unparsed("name", "Console"));
+            builder.resolver(Placeholder.unparsed("player_name", "Console"));
         }
 
         return builder.build();
@@ -167,5 +194,27 @@ public class MessagesUtils {
             .replace("&o", "<italic>")
             .replace("&k", "<obfuscated>")
             .replace("&r", "<reset>");
+    }
+
+    /**
+     * Isolated Wrapper class for PlaceholderAPI.
+     * <p>
+     * This is a clever Java trick: the JVM will only attempt to load this class
+     * (and consequently look for the PAPI jar) if the isPapiEnabled() check passes.
+     * This completely prevents NoClassDefFoundError on servers without PAPI.
+     * </p>
+     */
+    private static class PapiWrapper {
+
+        /**
+         * Parses the PAPI placeholders safely.
+         *
+         * @param player The player to parse placeholders for.
+         * @param text   The raw string containing %placeholders%.
+         * @return The string with values replaced by PlaceholderAPI.
+         */
+        static String set(Player player, String text) {
+            return PlaceholderAPI.setPlaceholders(player, text);
+        }
     }
 }

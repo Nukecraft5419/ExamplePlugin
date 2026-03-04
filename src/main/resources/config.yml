@@ -35,6 +35,8 @@
 # Custom Plugin Tags (Internal):
 # <prefix>             - The prefix of the plugin
 # <author>             - The author of the plugin
+# <version>            - The version of the plugin
+# <name>            - The display name of the player
 # <server_version>     - The version of the server
 # <server_api_version> - The API version of the server
 #
@@ -48,9 +50,9 @@
 #╚════════════════════╝
 plugin:
   prefix: "<gold><b>ExamplePlugin</b></gold> <dark_gray>»</dark_gray>"
-  hello: "<green>Hello <yellow>%ep_name%</yellow>!</green>"
+  hello: "<green>Hello <yellow><name></yellow>!</green>"
   author: "<prefix> <gray>The author of the plugin is:</gray> <yellow><author></yellow>"
-  version: "<prefix> <gray>The version of the plugin is the:</gray> <yellow>v%ep_version%</yellow>"
+  version: "<prefix> <gray>The version of the plugin is the:</gray> <yellow>v<version></yellow>"
   reload: "<prefix> <green>The plugin has been reloaded!</green>"
   help:
     - "<dark_gray><strikethrough>-------------</strikethrough> [<gold><b>ExamplePlugin</b></gold>] <strikethrough>-------------</strikethrough></dark_gray>"
@@ -73,11 +75,11 @@ errors:
 #╚══════════════════╝
 join:
   enabled: true
-  message: "<green>Hello <yellow>%ep_name%</yellow> this is example message join</green>"
+  message: "<green>Hello <yellow><name></yellow> this is example message join</green>"
 
 #╔═════════════════════════╗
 #║ ● Server Info Message ● ║
 #╚═════════════════════════╝
 server-info:
   enabled: true
-  message: "<prefix> <gray>Version server: <yellow><server_version></yellow> version plugin: <yellow>%ep_version%</yellow> version api plugin: <yellow><server_api_version></yellow></gray>"
+  message: "<prefix> <gray>Version server: <yellow><server_version></yellow> version plugin: <yellow><version></yellow> version api plugin: <yellow><server_api_version></yellow></gray>"
