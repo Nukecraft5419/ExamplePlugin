@@ -24,10 +24,6 @@
 package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
-import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
-import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
-import dev.nukecraft5419.exampleplugin.modules.hooks.HookModule;
-import dev.nukecraft5419.exampleplugin.modules.listeners.ListenerModule;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,7 +33,6 @@ public class ExamplePlugin extends JavaPlugin {
     // You can find the plugin id of your plugins on
     // the page https://bstats.org/what-is-my-plugin-id
     private static final int BSTATS_ID = 29819;
-    private ModuleManager moduleManager;
 
     @Override
     public void onEnable() {
@@ -49,15 +44,7 @@ public class ExamplePlugin extends JavaPlugin {
         ExamplePluginAPI.register(this);
 
         // Initialize the module manager
-        this.moduleManager = new ModuleManager(this);
-
-        // Register all plugin modules
-        this.moduleManager.registerModule(new HookModule(this));
-        this.moduleManager.registerModule(new CommandModule(this));
-        this.moduleManager.registerModule(new ListenerModule(this));
-
-        // Load and enable all registered modules
-        this.moduleManager.loadModules();
+        ExamplePluginAPI.getModuleManager().loadModules();
 
         SendUtils.log("<prefix> <green>successfully enabled!</green>");
     }
@@ -66,9 +53,9 @@ public class ExamplePlugin extends JavaPlugin {
     public void onDisable() {
 
         // Unload and disable all modules safely to prevent memory leaks
-        if (this.moduleManager != null) {
-            this.moduleManager.unloadModules();
-        }
+        try {
+            ExamplePluginAPI.getModuleManager().unloadModules();
+        } catch (Exception ignore) {}
 
         SendUtils.log("<prefix> <red>was successfully disabled!</red>");
 

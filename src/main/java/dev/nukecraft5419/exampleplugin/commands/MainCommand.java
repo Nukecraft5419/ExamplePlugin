@@ -30,6 +30,7 @@ import dev.nukecraft5419.exampleplugin.commands.subcommands.HelloCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.HelpCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.ReloadCommand;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
+import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,8 +45,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Main command router for ExamplePlugin.
- * Delegates execution and tab completion to isolated SubCommand classes.
+ * Initializes the main command router.
+ * Registers core subcommands and dynamically loads optional ones based on modules.yml.
+ *
+ * @param plugin The main plugin instance.
  */
 public class MainCommand implements CommandExecutor, TabCompleter {
 
@@ -56,10 +59,16 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     public MainCommand(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
 
+        ModuleConfigManager moduleConfig = ExamplePluginAPI.getModuleManager().getModuleConfig();
+
         subCommands.add(new HelpCommand());
-        subCommands.add(new HelloCommand());
         subCommands.add(new GetCommand());
         subCommands.add(new ReloadCommand());
+
+        if (moduleConfig.isCommandEnabled("hello")) {
+            subCommands.add(new HelloCommand());
+            SendUtils.log("<green>Loaded command:</green> <yellow>hello</yellow>");
+        }
     }
 
     /**

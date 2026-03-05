@@ -24,17 +24,21 @@
 package dev.nukecraft5419.exampleplugin.modules.hooks;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.modules.PluginModule;
+import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Module responsible for hooking into external plugins (e.g., PlaceholderAPI).
+ * Module responsible for managing all external plugin integrations (Hooks).
  */
 public class HookModule implements PluginModule {
 
     private final ExamplePlugin plugin;
+    private final ModuleConfigManager moduleConfig = ExamplePluginAPI.getModuleManager().getModuleConfig();
 
     public HookModule(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
@@ -42,18 +46,21 @@ public class HookModule implements PluginModule {
 
     @Override
     public void onEnable() {
-        // Soft-Dependency: check if PAPI is installed without crashing the plugin
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderHook(plugin).register();
-            plugin.getLogger().info("PlaceholderAPI found! Hook registered successfully.");
-        } else {
-            plugin.getLogger().warning("PlaceholderAPI not found! The plugin will still work, but some placeholders might not parse.");
+
+        // --- [ 1. PlaceholderAPI Hook ] ---
+        if (moduleConfig.isHookEnabled("PlaceholderAPI")) {
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                new PlaceholderHook(plugin).register();
+                SendUtils.log("<green>Loaded hook:</green> <yellow>PlaceholderAPI</yellow>");
+            } else {
+                plugin.getLogger().warning("PlaceholderAPI not found! The plugin will still work, but some placeholders might not parse.");
+            }
         }
     }
 
     @Override
     public void onDisable() {
-        // PlaceholderAPI handles unregistering automatically when the plugin disables
+        // PlaceholderAPI handles unregistering automatically when the plugin disables.
     }
 
     @Override

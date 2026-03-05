@@ -1,8 +1,11 @@
 package dev.nukecraft5419.exampleplugin.modules.listeners;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
+import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.modules.PluginModule;
+import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class ListenerModule implements PluginModule {
 
     private final ExamplePlugin plugin;
+    private final ModuleConfigManager moduleConfig = ExamplePluginAPI.getModuleManager().getModuleConfig();
 
     public ListenerModule(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
@@ -18,8 +22,12 @@ public class ListenerModule implements PluginModule {
 
     @Override
     public void onEnable() {
+
         // Register the join event listener
-        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
+        if (moduleConfig.isListenerEnabled("PlayerJoinListener")) {
+            plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(plugin), plugin);
+            SendUtils.log("<green>Loaded listener:</green> <yellow>PlayerJoinListener</yellow>");
+        }
     }
 
     @Override

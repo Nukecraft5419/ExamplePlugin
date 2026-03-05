@@ -1,0 +1,17 @@
+# ============================================================================ #
+#                              MODULES CONFIGURATION                           #
+#                                                                              #
+#  Enable or disable specific features of the plugin here.                     #
+#  Set a module to 'false' to completely prevent it from loading into memory.  #
+#                                                                              #
+#  ⚠️ NOTE: You MUST restart the server for these changes to take effect!      #
+# ============================================================================ #
+
+hooks:
+  PlaceholderAPI: true
+
+commands:
+  hello: true
+
+listeners:
+  PlayerJoinListener: true

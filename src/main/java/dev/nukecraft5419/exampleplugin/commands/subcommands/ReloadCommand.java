@@ -53,7 +53,14 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+
+        // 1. Reloads the main config.yml and updates messages/settings
         config.reloadConfig();
+
+        // 2. Reloads the modules.yml configuration via the API
+        // Note: This does not toggle modules on/off at runtime, but prepares the cache for the next restart.
+        ExamplePluginAPI.getModuleManager().reloadConfig();
+
         SendUtils.sendMessage(sender, config.getPluginReload());
     }
 

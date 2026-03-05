@@ -25,6 +25,7 @@ package dev.nukecraft5419.exampleplugin.api;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
+import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.ApiStatus;
@@ -42,6 +43,7 @@ public class ExamplePluginAPI {
     private static ExamplePluginAPI instance;
     private final MainConfigManager mainConfigManager;
     private BukkitAudiences adventure;
+    private final ModuleManager moduleManager;
 
     /**
      * Internal constructor to initialize the API instance.
@@ -53,6 +55,7 @@ public class ExamplePluginAPI {
         this.plugin = plugin;
         this.mainConfigManager = new MainConfigManager(plugin);
         this.adventure = BukkitAudiences.create(plugin);
+        this.moduleManager = new ModuleManager(plugin);
     }
 
     /**
@@ -154,6 +157,17 @@ public class ExamplePluginAPI {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return getInstance().adventure;
+    }
+
+    /**
+     * Retrieves the central ModuleManager instance.
+     * Use this method to interact with the plugin's module lifecycle
+     * (e.g., getting a list of active modules or reloading their configs).
+     *
+     * @return The {@link ModuleManager} instance.
+     */
+    public static ModuleManager getModuleManager() {
+        return getInstance().moduleManager;
     }
 
     /**

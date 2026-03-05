@@ -24,25 +24,43 @@
 package dev.nukecraft5419.exampleplugin.modules;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
+import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
+import dev.nukecraft5419.exampleplugin.modules.hooks.HookModule;
+import dev.nukecraft5419.exampleplugin.modules.listeners.ListenerModule;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * Core manager responsible for the lifecycle of all plugin modules.
+ * It handles the registration, enabling, and disabling of features safely,
+ * preventing memory leaks and ensuring strict dependency management based on modules.yml.
+ */
 public class ModuleManager {
 
     private final ExamplePlugin plugin;
+    private final ModuleConfigManager moduleConfig;
     private final List<PluginModule> modules = new ArrayList<>();
 
     public ModuleManager(ExamplePlugin plugin) {
         this.plugin = plugin;
+
+        this.moduleConfig = new ModuleConfigManager(plugin);
     }
 
     /**
-     * Registers and enables all active modules.
+     * Registers and loads all enabled modules based on modules.yml.
      */
     public void loadModules() {
+
+        new CommandModule(plugin).onEnable();
+        new ListenerModule(plugin).onEnable();
+
+        registerModule(new HookModule(plugin));
+
         for (PluginModule module : modules) {
             try {
                 module.onEnable();
@@ -52,6 +70,16 @@ public class ModuleManager {
                 plugin.getLogger().log(Level.SEVERE, "Critical error while enabling module: " + module.getName(), e);
             }
         }
+    }
+
+    /**
+     * Adds a new module to the manager's list.
+     * Note: This does not enable the module immediately.
+     *
+     * @param module The PluginModule instance to register.
+     */
+    public void registerModule(PluginModule module) {
+        this.modules.add(module);
     }
 
     /**
@@ -71,12 +99,24 @@ public class ModuleManager {
     }
 
     /**
-     * Registers a new module to be managed by the ModuleManager.
-     * Modules must be registered before calling {@link #loadModules()}.
-     *
-     * @param module The PluginModule instance to register.
+     * Reloads the modules.yml configuration file.
      */
-    public void registerModule(PluginModule module) {
-        this.modules.add(module);
+    public void reloadConfig() {
+        moduleConfig.reload();
+    }
+
+    /**
+     * Gets the list of currently active modules.
+     */
+    public List<PluginModule> getModules() {
+        return modules;
+    }
+
+    /**
+     * Gets the module configuration manager.
+     * * @return The {@link ModuleConfigManager} instance handling modules.yml.
+     */
+    public ModuleConfigManager getModuleConfig() {
+        return moduleConfig;
     }
 }
