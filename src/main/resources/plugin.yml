@@ -5,6 +5,9 @@ description: "${description}"
 author: "${author}"
 api-version: "${apiVersion}"
 softdepend: [PlaceholderAPI]
+libraries:
+  - "${adventure}"
+  - "${miniMessage}"
 commands:
     exampleplugin:
         description: Main command for the plugin

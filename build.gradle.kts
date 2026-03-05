@@ -22,8 +22,8 @@ repositories {
 dependencies {
     compileOnly(libs.spigot) // Spigot API
     compileOnly(libs.placeholderApi) // Placeholder API
-    implementation(libs.adventureBukkit) // Adventure Platform Bukkit
-    implementation(libs.miniMessage) // MiniMessage API
+    compileOnly(libs.adventureBukkit) // Adventure Platform Bukkit
+    compileOnly(libs.miniMessage) // MiniMessage API
     implementation(libs.bStats) // bStats API
 }
 
@@ -48,7 +48,7 @@ tasks.jar {
 
 tasks.shadowJar {
   // Instructs ShadowJar to bundle all dependencies marked as "implementation"
-  // (like bStats and Kyori Adventure/MiniMessage) into our final plugin JAR.
+  // (like bStats) into our final plugin JAR.
   configurations = listOf(project.configurations.runtimeClasspath.get())
 
   // Removes the default "-all" suffix from the generated JAR file name,
@@ -57,9 +57,8 @@ tasks.shadowJar {
 
   // Relocation: Moves external libraries into our plugin's internal package structure.
   // This is CRITICAL to prevent ClassNotFoundException or NoSuchMethodError conflicts
-  // if another plugin on the same server is using a different version of bStats or Kyori.
+  // if another plugin on the same server is using a different version of bStats.
   relocate("org.bstats", "${project.group}.libs.bStats")
-  relocate("net.kyori", "${project.group}.libs.adventureBukkit")
 }
 
 tasks.build {
@@ -78,6 +77,8 @@ tasks.withType<ProcessResources>().configureEach {
       "description" to project.property("description"),
       "author" to project.property("author"),
       "apiVersion" to project.property("apiVersion"),
+      "adventure" to libs.adventureBukkit.get().toString(),
+      "miniMessage" to libs.miniMessage.get().toString(),
     )
     inputs.properties(props)
     filteringCharset = "UTF-8"
