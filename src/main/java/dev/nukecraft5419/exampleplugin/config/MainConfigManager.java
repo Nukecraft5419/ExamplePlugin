@@ -35,7 +35,6 @@ import java.util.List;
  */
 public class MainConfigManager {
 
-    private final ExamplePlugin plugin;
     private final CustomConfig configFile;
 
     // --- [ Plugin Information ] ---
@@ -63,8 +62,6 @@ public class MainConfigManager {
      * @param plugin The main class instance of the plugin.
      */
     public MainConfigManager(@NotNull ExamplePlugin plugin) {
-        this.plugin = plugin;
-
         configFile = new CustomConfig(plugin, "config.yml");
         loadConfig();
     }

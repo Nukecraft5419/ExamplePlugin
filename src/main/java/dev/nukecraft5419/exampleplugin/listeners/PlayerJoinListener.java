@@ -23,7 +23,6 @@
  */
 package dev.nukecraft5419.exampleplugin.listeners;
 
-import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
@@ -31,15 +30,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.jetbrains.annotations.NotNull;
 
+/**
+ * Listens for player join events.
+ * Handles sending the welcome message and server info based on config settings.
+ */
 public class PlayerJoinListener implements Listener {
-
-    private final ExamplePlugin plugin;
-
-    public PlayerJoinListener(@NotNull ExamplePlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){

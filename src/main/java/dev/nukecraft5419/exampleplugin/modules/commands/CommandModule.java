@@ -43,7 +43,7 @@ public class CommandModule implements PluginModule {
 
     @Override
     public void onEnable() {
-        MainCommand mainCommand = new MainCommand(plugin);
+        MainCommand mainCommand = new MainCommand();
 
         PluginCommand command = plugin.getCommand("exampleplugin");
         if (command != null) {

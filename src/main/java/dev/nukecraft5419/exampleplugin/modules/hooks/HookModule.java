@@ -50,7 +50,7 @@ public class HookModule implements PluginModule {
         // --- [ 1. PlaceholderAPI Hook ] ---
         if (moduleConfig.isHookEnabled("PlaceholderAPI")) {
             if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                new PlaceholderHook(plugin).register();
+                new PlaceholderHook().register();
                 SendUtils.log("<green>Loaded hook:</green> <yellow>PlaceholderAPI</yellow>");
             } else {
                 plugin.getLogger().warning("PlaceholderAPI not found! The plugin will still work, but some placeholders might not parse.");
@@ -60,7 +60,7 @@ public class HookModule implements PluginModule {
 
     @Override
     public void onDisable() {
-        // PlaceholderAPI handles unregistering automatically when the plugin disables.
+        // PlaceholderAPI handles unregistering automatically when the plugin disables
     }
 
     @Override

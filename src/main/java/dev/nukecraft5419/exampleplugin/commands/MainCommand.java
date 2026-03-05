@@ -23,7 +23,6 @@
  */
 package dev.nukecraft5419.exampleplugin.commands;
 
-import dev.nukecraft5419.exampleplugin.ExamplePlugin;
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.GetCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.HelloCommand;
@@ -47,18 +46,13 @@ import java.util.stream.Collectors;
 /**
  * Initializes the main command router.
  * Registers core subcommands and dynamically loads optional ones based on modules.yml.
- *
- * @param plugin The main plugin instance.
  */
 public class MainCommand implements CommandExecutor, TabCompleter {
 
-    private final ExamplePlugin plugin;
     private final MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
     private final List<SubCommand> subCommands = new ArrayList<>();
 
-    public MainCommand(@NotNull ExamplePlugin plugin) {
-        this.plugin = plugin;
-
+    public MainCommand() {
         ModuleConfigManager moduleConfig = ExamplePluginAPI.getModuleManager().getModuleConfig();
 
         subCommands.add(new HelpCommand());
