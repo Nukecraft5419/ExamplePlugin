@@ -4,15 +4,13 @@ plugins {
     alias(libs.plugins.runPaper) // Run Paper
 }
 
-group to project.property("group")
+group = providers.gradleProperty("group").get()
+version = providers.gradleProperty("version").get()
 
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
         name = "spigotmc-repo"
-    }
-    maven ("https://oss.sonatype.org/content/groups/public/") {
-        name = "sonatype"
     }
     maven("https://repo.extendedclip.com/releases/") {
         name = "placeholder-api"
@@ -24,6 +22,7 @@ dependencies {
     compileOnly(libs.placeholderApi) // Placeholder API
     compileOnly(libs.adventureBukkit) // Adventure Platform Bukkit
     compileOnly(libs.miniMessage) // MiniMessage API
+
     implementation(libs.bStats) // bStats API
 }
 
@@ -71,17 +70,19 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<ProcessResources>().configureEach {
     val props = mapOf(
-      "name" to project.property("name"),
-      "main" to project.property("main"),
-      "version" to project.property("version"),
-      "description" to project.property("description"),
-      "author" to project.property("author"),
-      "apiVersion" to project.property("apiVersion"),
-      "adventure" to libs.adventureBukkit.get().toString(),
-      "miniMessage" to libs.miniMessage.get().toString(),
+      "name" to providers.gradleProperty("name").get(),
+      "main" to providers.gradleProperty("main").get(),
+      "version" to providers.gradleProperty("version").get(),
+      "description" to providers.gradleProperty("description").get(),
+      "author" to providers.gradleProperty("author").get(),
+      "apiVersion" to providers.gradleProperty("apiVersion").get(),
+      "adventure" to libs.adventureBukkit.get(),
+      "miniMessage" to libs.miniMessage.get(),
     )
+
     inputs.properties(props)
     filteringCharset = "UTF-8"
+
     filesMatching("plugin.yml") {
         expand(props)
     }
