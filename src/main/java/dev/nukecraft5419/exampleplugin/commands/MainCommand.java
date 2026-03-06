@@ -28,7 +28,6 @@ import dev.nukecraft5419.exampleplugin.commands.subcommands.GetCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.HelloCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.HelpCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.ReloadCommand;
-import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.Command;
@@ -49,7 +48,6 @@ import java.util.stream.Collectors;
  */
 public class MainCommand implements CommandExecutor, TabCompleter {
 
-    private final MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
     private final List<SubCommand> subCommands = new ArrayList<>();
 
     public MainCommand() {
@@ -72,7 +70,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            SendUtils.sendMessage(sender, config.getErrorsConsole());
+            SendUtils.sendTranslation(sender, "errors.console");
             return true;
         }
 
@@ -99,7 +97,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission(subCmd.getPermission())) {
                     subCmd.execute(sender, args);
                 } else {
-                    SendUtils.sendMessage(sender, config.getErrorsNoPermission());
+                    SendUtils.sendTranslation(sender, "errors.no-permission");
                 }
                 return;
             }

@@ -1,0 +1,79 @@
+# ----------------------------------------------------
+# Formato Modern Adventure MiniMessage
+# ----------------------------------------------------
+# Utilizziamo MiniMessage come motore principale.
+# Questo consente colori RGB, gradienti, eventi al click e un parsing più sicuro.
+#
+# ✨ SUPPORTO LEGACY (IL PONTE):
+# Non preoccuparti! Puoi ancora usare i classici codici colore '&' (es. &6, &l)
+# e i codici Hex (es. &#FF0000). Il nostro motore li converte automaticamente
+# in tag MiniMessage moderni senza rompere i gradienti.
+#
+# ⚠️ REGOLA IMPORTANTE (Sintassi stile XML):
+# Quando usi i tag MiniMessage (come <red>), è buona norma
+# chiuderli (</red>) affinché non si estendano al resto del testo.
+# Esempio: "<gray>Questo è grigio, </gray><green>questo è verde!</green>"
+#
+# 🛠️ STRUMENTI E LINK UTILI:
+# - Editor Web MiniMessage (Testa i tuoi messaggi live!):
+#   https://webui.advntr.dev/
+# - Lista ufficiale segnaposto PlaceholderAPI:
+#   https://wiki.placeholderapi.com/users/placeholder-list/minecraft/
+#
+# Colori Standard:
+# <black>, <dark_blue>, <dark_green>, <dark_aqua>, <dark_red>, <dark_purple>,
+# <gold>, <gray>, <dark_gray>, <blue>, <green>, <aqua>, <red>, <light_purple>,
+# <yellow>, <white>
+#
+# Formattazione:
+# <obfuscated>, <bold>, <strikethrough>, <underlined>, <italic>, <reset>
+#
+# Tag Personalizzati del Plugin (Interni):
+# <prefix>             - Il prefisso del plugin
+# <author>             - L'autore del plugin
+# <version>            - La versione del plugin
+# <name>               - Il nome visualizzato del giocatore
+# <server_version>     - La versione del server
+# <server_api_version> - La versione API del server
+#
+# Segnaposto Esterni (PlaceholderAPI):
+# %ep_version%         - La versione del plugin (via PAPI)
+# %ep_name%            - Il nome visualizzato del giocatore (via PAPI)
+# ----------------------------------------------------
+
+#╔════════════════════╗
+#║ ● Messaggi Plugin  ● ║
+#╚════════════════════╝
+plugin:
+  prefix: "<gold><b>ExamplePlugin</b></gold> <dark_gray>»</dark_gray>"
+  hello: "<green>Ciao <yellow><name></yellow>!</green>"
+  author: "<prefix> <gray>L'autore del plugin è:</gray> <yellow><author></yellow>"
+  version: "<prefix> <gray>La versione del plugin è la:</gray> <yellow>v<version></yellow>"
+  reload: "<prefix> <green>Il plugin è stato ricaricato!</green>"
+  help:
+    - "<dark_gray><strikethrough>-------------</strikethrough> [<gold><b>ExamplePlugin</b></gold>] <strikethrough>-------------</strikethrough></dark_gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin help><hover:show_text:'Clicca per suggerire il comando'>/exampleplugin help</hover></click></red> - <yellow>Mostra l'aiuto</yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin hello><hover:show_text:'Clicca per suggerire il comando'>/exampleplugin hello</hover></click></red> - <yellow>Mostra saluto</yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin get><hover:show_text:'Clicca per suggerire il comando'>/exampleplugin get</hover></click></red> - <yellow>Mostra <author|version></yellow></gray>"
+    - "<gray>- <red><click:suggest_command:/exampleplugin reload><hover:show_text:'Clicca per suggerire il comando'>/exampleplugin reload</hover></click></red> - <yellow>Ricarica il plugin</yellow></gray>"
+    - "<dark_gray><strikethrough>------------------------------------------</strikethrough></dark_gray>"
+
+#╔════════════════════╗
+#║ ● Messaggi Errore  ● ║
+#╚════════════════════╝
+errors:
+  console: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <red>Questo comando non può essere eseguito dalla console!</red>"
+  no-permission: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <red>Non hai il permesso di eseguire questo comando!</red>"
+  no-args-get: "<prefix> <dark_gray><b>(<dark_red>!</dark_red>)</b></dark_gray> <yellow>Argomenti sconosciuti!</yellow> <gray>Per favore usa il comando</gray> <red>/exampleplugin <author|version></red>"
+
+#╔══════════════════╗
+#║ ● Messaggio Join ● ║
+#╚══════════════════╝
+join:
+  message: "<green>Ciao <yellow><name></yellow>, questo è un messaggio di esempio per l'ingresso</green>"
+
+#╔═══════════════════════════╗
+#║ ● Info Messaggio Server ● ║
+#╚═══════════════════════════╝
+server-info:
+  message: "<prefix> <gray>Versione server: <yellow><server_version></yellow> versione plugin: <yellow><version></yellow> versione api plugin: <yellow><server_api_version></yellow></gray>"

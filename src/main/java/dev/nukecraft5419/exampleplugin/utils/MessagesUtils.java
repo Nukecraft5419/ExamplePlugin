@@ -24,7 +24,6 @@
 package dev.nukecraft5419.exampleplugin.utils;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
-import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -120,10 +119,14 @@ public class MessagesUtils {
      * @return A TagResolver containing all registered custom tags.
      */
     private static TagResolver buildInternalResolvers(Player player) {
-        MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
         // Safe fallbacks: If the config is broken or missing, these prevent MiniMessage from crashing.
-        String prefix = (config != null && config.getPluginPrefix() != null) ? config.getPluginPrefix() : "<gray>[ExamplePlugin]</gray>";
+        String prefix = ExamplePluginAPI.getLanguageManager().getRawMessage(player, "plugin.prefix");
+
+
+        if (prefix == null || prefix.contains("Missing translation") || prefix.contains("Missing locale file")) {
+            prefix = "<gray>[ExamplePlugin]</gray>";
+        }
 
         // Guaranteed to be non-null by the API annotations
         String version = ExamplePluginAPI.getVersionPlugin();

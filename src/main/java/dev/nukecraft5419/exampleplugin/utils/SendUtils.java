@@ -67,6 +67,38 @@ public class SendUtils {
         }
     }
 
+    public static void sendTranslation(CommandSender sender, String path) {
+        if (sender == null || path == null || path.isEmpty()) return;
+
+        String rawMessage = ExamplePluginAPI.getLanguageManager().getRawMessage(sender, path);
+
+        if (rawMessage == null || rawMessage.isEmpty()) return;
+
+        sendMessage(sender, rawMessage);
+    }
+
+    /**
+     * Translates and sends a list of messages to a CommandSender based on their client language.
+     * Automatically retrieves the correct string list from the locales folder and applies
+     * MiniMessage formatting and PlaceholderAPI parsing.
+     *
+     * @param sender The recipient of the messages (Player or Console).
+     * @param path   The YAML key path to the string list in the locales file (e.g., "plugin.help").
+     */
+    public static void sendTranslations(CommandSender sender, String path) {
+        // 1. Validate inputs to prevent errors
+        if (sender == null || path == null || path.isEmpty()) return;
+
+        // 2. Retrieve the raw list of strings tailored to the player's language
+        List<String> rawMessages = ExamplePluginAPI.getLanguageManager().getRawMessageList(sender, path);
+
+        // 3. If the list is missing or empty in the config, silently abort
+        if (rawMessages == null || rawMessages.isEmpty()) return;
+
+        // 4. Delegate to the existing list sender (which handles formatting and dispatching)
+        sendMessages(sender, rawMessages);
+    }
+
     /**
      * Shorthand to send a formatted message directly to the server console.
      * Useful for startup, shutdown, or debugging logs.

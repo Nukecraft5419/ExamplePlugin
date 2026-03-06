@@ -24,6 +24,7 @@
 package dev.nukecraft5419.exampleplugin.api;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.exampleplugin.config.LanguageConfigManager;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -42,6 +43,7 @@ public class ExamplePluginAPI {
     private final ExamplePlugin plugin;
     private static ExamplePluginAPI instance;
     private final MainConfigManager mainConfigManager;
+    private final LanguageConfigManager languageManager;
     private BukkitAudiences adventure;
     private final ModuleManager moduleManager;
 
@@ -54,6 +56,7 @@ public class ExamplePluginAPI {
     protected ExamplePluginAPI(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
         this.mainConfigManager = new MainConfigManager(plugin);
+        this.languageManager = new LanguageConfigManager(plugin);
         this.adventure = BukkitAudiences.create(plugin);
         this.moduleManager = new ModuleManager(plugin);
     }
@@ -168,6 +171,10 @@ public class ExamplePluginAPI {
      */
     public static ModuleManager getModuleManager() {
         return getInstance().moduleManager;
+    }
+
+    public static LanguageConfigManager getLanguageManager() {
+        return getInstance().languageManager;
     }
 
     /**

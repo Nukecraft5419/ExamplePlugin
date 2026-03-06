@@ -23,9 +23,7 @@
  */
 package dev.nukecraft5419.exampleplugin.commands.subcommands;
 
-import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.SubCommand;
-import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.CommandSender;
@@ -39,8 +37,6 @@ import java.util.List;
  */
 public class HelloCommand implements SubCommand {
 
-    private final MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
-
     @Override
     public String getName() {
         return "hello";
@@ -53,7 +49,7 @@ public class HelloCommand implements SubCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        SendUtils.sendMessage(sender, config.getPluginHello());
+        SendUtils.sendTranslation(sender, "plugin.hello");
     }
 
     @Override

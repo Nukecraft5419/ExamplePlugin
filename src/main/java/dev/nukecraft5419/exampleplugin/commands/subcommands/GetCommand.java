@@ -23,9 +23,7 @@
  */
 package dev.nukecraft5419.exampleplugin.commands.subcommands;
 
-import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.SubCommand;
-import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
 import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bukkit.command.CommandSender;
@@ -38,8 +36,6 @@ import java.util.List;
  * Retrieves internal plugin information.
  */
 public class GetCommand implements SubCommand {
-
-    private final MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
     @Override
     public String getName() {
@@ -55,15 +51,15 @@ public class GetCommand implements SubCommand {
     public void execute(CommandSender sender, String[] args) {
 
         if (args.length < 2) {
-            SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
+            SendUtils.sendTranslation(sender, "errors.no-args-get");
             return;
         }
 
         // Resolves the requested info argument
         switch (args[1].toLowerCase()) {
-            case "author" -> SendUtils.sendMessage(sender, config.getPluginAuthor());
-            case "version" -> SendUtils.sendMessage(sender, config.getPluginVersion());
-            default -> SendUtils.sendMessage(sender, config.getErrorsNoArgsGet());
+            case "author" -> SendUtils.sendTranslation(sender, "plugin.author");
+            case "version" -> SendUtils.sendTranslation(sender, "plugin.version");
+            default -> SendUtils.sendTranslation(sender, "errors.no-args-get");
         }
     }
 

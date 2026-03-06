@@ -44,11 +44,11 @@ public class PlayerJoinListener implements Listener {
         MainConfigManager config = ExamplePluginAPI.getMainConfigManager();
 
         if (config.getJoinMessageEnabled()) {
-            SendUtils.sendMessage(player, config.getJoinMessage());
+            SendUtils.sendTranslation(player, "join.message");
         }
 
         if (config.getServerInfoMessageEnabled()) {
-            SendUtils.sendMessage(player, config.getServerInfoMessage());
+            SendUtils.sendTranslation(player, "server-info.message");
         }
     }
 }

@@ -28,6 +28,10 @@ import dev.nukecraft5419.exampleplugin.utils.SendUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * The main entry point of the ExamplePlugin.
+ * Handles the initialization of the API, bStats metrics, and the module lifecycle.
+ */
 public class ExamplePlugin extends JavaPlugin {
 
     // You can find the plugin id of your plugins on
@@ -40,10 +44,10 @@ public class ExamplePlugin extends JavaPlugin {
         // Initialize bStats metrics
         new Metrics(this, BSTATS_ID);
 
-        // Register the plugin API
+        // Register the plugin API making it accessible globally
         ExamplePluginAPI.register(this);
 
-        // Initialize the module manager
+        // Initialize the module manager and load all enabled features
         ExamplePluginAPI.getModuleManager().loadModules();
 
         SendUtils.log("<prefix> <green>successfully enabled!</green>");
