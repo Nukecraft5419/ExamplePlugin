@@ -56,9 +56,8 @@ public class ModuleManager {
      */
     public void loadModules() {
 
-        new CommandModule(plugin).onEnable();
-        new ListenerModule(plugin).onEnable();
-
+        registerModule(new CommandModule(plugin));
+        registerModule(new ListenerModule(plugin));
         registerModule(new HookModule(plugin));
 
         for (PluginModule module : modules) {
