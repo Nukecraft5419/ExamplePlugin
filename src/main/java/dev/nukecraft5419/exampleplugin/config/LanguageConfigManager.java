@@ -105,6 +105,7 @@ public class LanguageConfigManager {
             return java.util.List.of("<red>Missing locale file for: " + locale + "</red>");
         }
 
-        return config.getConfig().getStringList(path);
+        List<String> list = config.getConfig().getStringList(path);
+        return list.isEmpty() ? java.util.List.of("<red>Missing translation key (list): " + path + "</red>") : list;
     }
 }
