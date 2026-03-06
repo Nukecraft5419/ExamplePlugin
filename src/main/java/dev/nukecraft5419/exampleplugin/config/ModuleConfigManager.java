@@ -63,17 +63,6 @@ public class ModuleConfigManager {
     }
 
     /**
-     * Dynamically checks if a module is enabled in the config.
-     * If the key is missing, it returns true by default.
-     *
-     * @param moduleName The exact name of the module (e.g. "CommandModule")
-     * @return true if enabled, false otherwise
-     */
-    public boolean isModuleEnabled(String moduleName) {
-        return this.config.getBoolean("modules." + moduleName, true);
-    }
-
-    /**
      * Checks if a specific external hook is enabled in the modules.yml.
      *
      * @param hookName The name of the hook (e.g., "PlaceholderAPI", "Vault").
