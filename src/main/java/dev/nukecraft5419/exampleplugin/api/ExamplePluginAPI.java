@@ -119,22 +119,16 @@ public class ExamplePluginAPI {
     }
 
     /**
-     * Gets the Minecraft API version the plugin is targeting.
+     * Gets the clean Minecraft version of the server (e.g., "1.21.1").
+     * Very useful for version-specific logic or NMS.
      *
-     * @return The API version (e.g., "1.21").
-     */
-    public static String getServerApiVersion(){
-        return getInstance().plugin.getDescription().getAPIVersion();
-    }
-
-    /**
-     * Gets the full Bukkit version of the server.
-     *
-     * @return The server version string.
+     * @return The clean server version string.
      */
     @NotNull
     public static String getServerVersion() {
-        return Bukkit.getBukkitVersion();
+        // Bukkit.getBukkitVersion() returns something like "1.21.1-R0.1-SNAPSHOT"
+        // This splits the string and returns only the "1.21.1" part!
+        return Bukkit.getBukkitVersion().split("-")[0];
     }
 
     /**
