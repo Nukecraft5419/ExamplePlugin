@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Check for updates to Java/Gradle dependencies (e.g., Paper, bStats, Kyori Adventure)
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "java"
+
+  # Check for updates to GitHub Actions workflows (CI/CD)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"
