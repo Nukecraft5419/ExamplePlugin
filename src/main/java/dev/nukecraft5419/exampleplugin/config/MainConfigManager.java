@@ -24,6 +24,7 @@
 package dev.nukecraft5419.exampleplugin.config;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
+import dev.nukecraft5419.nukelexicon.config.CustomConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 

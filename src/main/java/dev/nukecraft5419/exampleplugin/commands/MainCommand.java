@@ -29,7 +29,7 @@ import dev.nukecraft5419.exampleplugin.commands.subcommands.HelloCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.HelpCommand;
 import dev.nukecraft5419.exampleplugin.commands.subcommands.ReloadCommand;
 import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

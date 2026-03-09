@@ -28,7 +28,7 @@ import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.hooks.PlaceholderHook;
 import dev.nukecraft5419.exampleplugin.modules.PluginModule;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

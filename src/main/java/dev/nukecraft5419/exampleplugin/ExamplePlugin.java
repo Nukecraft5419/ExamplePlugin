@@ -24,7 +24,8 @@
 package dev.nukecraft5419.exampleplugin;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.NukeLexicon;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,10 +45,16 @@ public class ExamplePlugin extends JavaPlugin {
         // Initialize bStats metrics
         new Metrics(this, BSTATS_ID);
 
-        // Register the plugin API making it accessible globally
+        // 1. Register the plugin API (This also initializes the config managers)
         ExamplePluginAPI.register(this);
 
-        // Initialize the module manager and load all enabled features
+        // 2. Retrieve the fallback language defined in config.yml
+        String fallbackLang = ExamplePluginAPI.getMainConfigManager().getFallbackLanguage();
+
+        // 3. Initialize NukeLexicon for i18n and MiniMessage formatting
+        NukeLexicon.init(this, fallbackLang, "<gray>[<aqua>ExamplePlugin</aqua>]</gray>");
+
+        // 4. Initialize the module manager and load all enabled features
         ExamplePluginAPI.getModuleManager().loadModules();
 
         SendUtils.log("<prefix> <green>successfully enabled!</green>");
@@ -62,6 +69,8 @@ public class ExamplePlugin extends JavaPlugin {
         } catch (Exception ignore) {}
 
         SendUtils.log("<prefix> <red>was successfully disabled!</red>");
+
+        NukeLexicon.close();
 
         // Unregister the plugin API
         ExamplePluginAPI.unregister();

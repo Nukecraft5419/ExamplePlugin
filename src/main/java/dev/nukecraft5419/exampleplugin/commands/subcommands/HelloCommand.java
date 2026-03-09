@@ -25,7 +25,7 @@ package dev.nukecraft5419.exampleplugin.commands.subcommands;
 
 import dev.nukecraft5419.exampleplugin.commands.SubCommand;
 import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

@@ -15,6 +15,7 @@ repositories {
     maven("https://repo.extendedclip.com/releases/") {
         name = "placeholder-api"
     }
+    maven("https://repo.nukecraft5419.com/")
 }
 
 dependencies {
@@ -23,6 +24,7 @@ dependencies {
     compileOnly(libs.adventureBukkit) // Adventure Platform Bukkit
     compileOnly(libs.miniMessage) // MiniMessage API
 
+    implementation(libs.nukeLexicon) // NukeLexicon
     implementation(libs.bStats) // bStats API
 }
 
@@ -57,6 +59,7 @@ tasks.shadowJar {
   // Relocation: Moves external libraries into our plugin's internal package structure.
   // This is CRITICAL to prevent ClassNotFoundException or NoSuchMethodError conflicts
   // if another plugin on the same server is using a different version of bStats.
+  relocate("dev.nukecraft5419.nukelexicon", "${project.group}.libs.nukelexicon")
   relocate("org.bstats", "${project.group}.libs.bStats")
 }
 

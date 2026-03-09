@@ -25,7 +25,7 @@ package dev.nukecraft5419.exampleplugin.listeners;
 
 import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -24,10 +24,8 @@
 package dev.nukecraft5419.exampleplugin.api;
 
 import dev.nukecraft5419.exampleplugin.ExamplePlugin;
-import dev.nukecraft5419.exampleplugin.config.LanguageConfigManager;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.modules.ModuleManager;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -43,8 +41,6 @@ public class ExamplePluginAPI {
     private final ExamplePlugin plugin;
     private static ExamplePluginAPI instance;
     private final MainConfigManager mainConfigManager;
-    private final LanguageConfigManager languageManager;
-    private BukkitAudiences adventure;
     private final ModuleManager moduleManager;
 
     /**
@@ -56,8 +52,6 @@ public class ExamplePluginAPI {
     protected ExamplePluginAPI(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
         this.mainConfigManager = new MainConfigManager(plugin);
-        this.languageManager = new LanguageConfigManager(plugin);
-        this.adventure = BukkitAudiences.create(plugin);
         this.moduleManager = new ModuleManager(plugin);
     }
 
@@ -93,12 +87,6 @@ public class ExamplePluginAPI {
      */
     @ApiStatus.Internal
     public static void unregister() {
-        if (instance != null) {
-            if (instance.adventure != null) {
-                instance.adventure.close();
-                instance.adventure = null;
-            }
-        }
         instance = null;
     }
 
@@ -150,19 +138,6 @@ public class ExamplePluginAPI {
     }
 
     /**
-     * Provides access to the Adventure BukkitAudiences instance.
-     *
-     * @return The {@link BukkitAudiences} instance.
-     */
-    @NotNull
-    public static BukkitAudiences getAdventure() {
-        if (getInstance().adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return getInstance().adventure;
-    }
-
-    /**
      * Retrieves the central ModuleManager instance.
      * Use this method to interact with the plugin's module lifecycle
      * (e.g., getting a list of active modules or reloading their configs).
@@ -171,10 +146,6 @@ public class ExamplePluginAPI {
      */
     public static ModuleManager getModuleManager() {
         return getInstance().moduleManager;
-    }
-
-    public static LanguageConfigManager getLanguageManager() {
-        return getInstance().languageManager;
     }
 
     /**

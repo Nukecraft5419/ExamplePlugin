@@ -28,7 +28,7 @@ import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.modules.commands.CommandModule;
 import dev.nukecraft5419.exampleplugin.modules.hooks.HookModule;
 import dev.nukecraft5419.exampleplugin.modules.listeners.ListenerModule;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 
 import java.util.ArrayList;
 import java.util.List;

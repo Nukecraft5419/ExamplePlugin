@@ -27,7 +27,8 @@ import dev.nukecraft5419.exampleplugin.api.ExamplePluginAPI;
 import dev.nukecraft5419.exampleplugin.commands.SubCommand;
 import dev.nukecraft5419.exampleplugin.config.MainConfigManager;
 import dev.nukecraft5419.exampleplugin.utils.PermissionsUtils;
-import dev.nukecraft5419.exampleplugin.utils.SendUtils;
+import dev.nukecraft5419.nukelexicon.NukeLexicon;
+import dev.nukecraft5419.nukelexicon.utils.SendUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -54,14 +55,14 @@ public class ReloadCommand implements SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
 
-        // 1. Reloads the main config.yml
+        // 1. Reload the main config.yml
         config.reloadConfig();
 
-        // 2. Reloads the modules.yml configuration
+        // 2. Reload the modules.yml configuration
         ExamplePluginAPI.getModuleManager().reloadConfig();
 
-        // 3. RELOADS THE LANGUAGES!
-        ExamplePluginAPI.getLanguageManager().loadLocales();
+        // 3. Reload all language files via NukeLexicon API
+        NukeLexicon.getInstance().getLanguageManager().loadLocales();
 
         SendUtils.sendTranslation(sender, "plugin.reload");
     }
