@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="assets/logo.png" alt="Plugin Logo" height="256" />
+  <img src="https://raw.githubusercontent.com/Nukecraft5419/ExamplePlugin/refs/heads/main/assets/logo.png" alt="Plugin Logo" height="256" />
   
   <h1>🚀 Spigot Modern Template</h1>
   
