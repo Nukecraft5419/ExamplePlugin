@@ -37,7 +37,7 @@
 
 ## 🛠️ Technologies & Stack
 
-* * **[Spigot API](https://hub.spigotmc.org/javadocs/spigot/)**: The core foundation of the project targeting modern versions (1.21+), fully compatible with Paper.
+* **[Spigot API](https://hub.spigotmc.org/javadocs/spigot/)**: The core foundation of the project targeting modern versions (1.21+), fully compatible with Paper.
 * **[NukeLexicon](https://github.com/nukecraft5419/NukeLexicon)**: Centralized core utility API handling all i18n multi-language logic and messaging.
 * **[Adventure & MiniMessage](https://docs.advntr.dev/)**: Advanced management of components, titles, sounds, and modern RGB/Hex formatting.
 * **[PlaceholderAPI](https://wiki.placeholderapi.com/)**: Native integration for dynamic placeholders with safe fallbacks.
