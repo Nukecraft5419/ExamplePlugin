@@ -4,7 +4,7 @@ metadata.format.version = "1.1"
 
 # Platforms
 spigot = "1.21.11-R0.2-SNAPSHOT"
-nukeLexicon = "1.0.0"
+nukeLexicon = "1.1.0"
 adventureBukkit = "4.4.1"
 miniMessage = "4.26.1"
 placeholderApi = "2.12.2"
