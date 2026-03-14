@@ -3,7 +3,7 @@ metadata.format.version = "1.1"
 [versions]
 
 # Platforms
-spigot = "1.20.4-R0.1-SNAPSHOT"
+spigot = "1.21.11-R0.2-SNAPSHOT"
 nukeLexicon = "1.0.0"
 adventureBukkit = "4.4.1"
 miniMessage = "4.26.1"
