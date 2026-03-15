@@ -1,0 +1,59 @@
+name: 🚀 CI/CD Pipeline
+
+# Trigger the workflow on push or pull request events for the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: 🛠️ Build and Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Read-only access to the repository code
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v6
+
+      # Configures the Java environment.
+      # Update 'java-version' here if you change the Java toolchain in build.gradle.kts
+      - name: ☕ Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      # Sets up Gradle caching and wrapper for faster builds
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # Ensures the gradlew script has execution permissions
+      - name: 🔐 Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # Executes the build process using the Gradle Wrapper
+      - name: 🔨 Build with Gradle
+        run: ./gradlew build
+
+  dependency-submission:
+    name: 📦 Dependency Submission
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Write access is required to submit the dependency graph
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: ☕ Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      # Generates and submits a dependency graph to GitHub, enabling Dependabot Alerts
+      - name: 📊 Submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
