@@ -32,7 +32,7 @@
 # <prefix>             - The prefix of the plugin
 # <author>             - The author of the plugin
 # <version>            - The version of the plugin
-# <name>            - The display name of the player
+# <name>               - The display name of the player
 # <server_version>     - The version of the server
 # <server_api_version> - The API version of the server
 #
