@@ -29,7 +29,12 @@ import dev.nukecraft5419.exampleplugin.config.ModuleConfigManager;
 import dev.nukecraft5419.exampleplugin.listeners.PlayerJoinListener;
 import dev.nukecraft5419.exampleplugin.modules.PluginModule;
 import dev.nukecraft5419.nukelexicon.utils.SendUtils;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Module responsible for registering all the event listeners of the plugin.
@@ -38,6 +43,7 @@ public class ListenerModule implements PluginModule {
 
     private final ExamplePlugin plugin;
     private final ModuleConfigManager moduleConfig = ExamplePluginAPI.getModuleManager().getModuleConfig();
+    private final List<Listener> registeredListeners = new ArrayList<>();
 
     public ListenerModule(@NotNull ExamplePlugin plugin) {
         this.plugin = plugin;
@@ -48,15 +54,27 @@ public class ListenerModule implements PluginModule {
 
         // Register the join event listener
         if (moduleConfig.isListenerEnabled("PlayerJoinListener")) {
-            plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
+            addListener(new PlayerJoinListener());
             SendUtils.log("<green>Loaded listener:</green> <yellow>PlayerJoinListener</yellow>");
         }
+    }
+
+    private void addListener(Listener listener) {
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        registeredListeners.add(listener);
     }
 
     @Override
     public void onDisable() {
         // Bukkit automatically unregisters events when the plugin is disabled.
         // No manual cleanup needed here.
+        for (Listener listener : registeredListeners) {
+            HandlerList.unregisterAll(listener);
+        }
+
+        SendUtils.log("<red>Unregistered " + registeredListeners.size() + " listeners.</red>");
+
+        registeredListeners.clear();
     }
 
     @Override
