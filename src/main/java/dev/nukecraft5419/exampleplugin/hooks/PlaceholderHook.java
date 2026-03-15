@@ -54,7 +54,6 @@ public class PlaceholderHook extends PlaceholderExpansion {
         return ExamplePluginAPI.getAuthorPlugin();
     }
 
-
     @Override
     public @NotNull String getVersion() {
         return ExamplePluginAPI.getVersionPlugin();
